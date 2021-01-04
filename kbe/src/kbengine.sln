@@ -416,8 +416,10 @@ Global
 		{78D80A15-BD8C-44E2-B49E-1F05B0A0A687}.Debug|Win64.Build.0 = Debug|x64
 		{78D80A15-BD8C-44E2-B49E-1F05B0A0A687}.Release|Win64.ActiveCfg = Release|x64
 		{78D80A15-BD8C-44E2-B49E-1F05B0A0A687}.Release|Win64.Build.0 = Release|x64
-		{00985893-F129-4E1C-8A1C-480D82CC1C06}.Debug|Win64.ActiveCfg = Debug|Win32
-		{00985893-F129-4E1C-8A1C-480D82CC1C06}.Release|Win64.ActiveCfg = Release|Win32
+		{00985893-F129-4E1C-8A1C-480D82CC1C06}.Debug|Win64.ActiveCfg = Debug|x64
+		{00985893-F129-4E1C-8A1C-480D82CC1C06}.Debug|Win64.Build.0 = Debug|x64
+		{00985893-F129-4E1C-8A1C-480D82CC1C06}.Release|Win64.ActiveCfg = Release|x64
+		{00985893-F129-4E1C-8A1C-480D82CC1C06}.Release|Win64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
