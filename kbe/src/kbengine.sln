@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2047
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dependencies", "dependencies", "{8BF90F4F-766B-4B4D-B7F3-BF4189A29F4E}"
 EndProject
@@ -193,6 +193,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_overlapped", "lib\python\PCbuild\_overlapped.vcxproj", "{EB6E69DD-04BF-4543-9B92-49FAABCEAC2E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_queue", "lib\python\PCbuild\_queue.vcxproj", "{78D80A15-BD8C-44E2-B49E-1F05B0A0A687}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lualib", "lib\dependencies\lua-5.3.6\lua\lua.vcxproj", "{00985893-F129-4E1C-8A1C-480D82CC1C06}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lua", "lua", "{639772BA-788D-4C7D-93C0-A3DFBBB87EE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -412,6 +416,8 @@ Global
 		{78D80A15-BD8C-44E2-B49E-1F05B0A0A687}.Debug|Win64.Build.0 = Debug|x64
 		{78D80A15-BD8C-44E2-B49E-1F05B0A0A687}.Release|Win64.ActiveCfg = Release|x64
 		{78D80A15-BD8C-44E2-B49E-1F05B0A0A687}.Release|Win64.Build.0 = Release|x64
+		{00985893-F129-4E1C-8A1C-480D82CC1C06}.Debug|Win64.ActiveCfg = Debug|Win32
+		{00985893-F129-4E1C-8A1C-480D82CC1C06}.Release|Win64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -475,6 +481,8 @@ Global
 		{9E48B300-37D1-11DD-8C41-005056C00008} = {04274E83-D752-4CC9-BFDE-A717D4E6ABAA}
 		{EB6E69DD-04BF-4543-9B92-49FAABCEAC2E} = {04274E83-D752-4CC9-BFDE-A717D4E6ABAA}
 		{78D80A15-BD8C-44E2-B49E-1F05B0A0A687} = {04274E83-D752-4CC9-BFDE-A717D4E6ABAA}
+		{00985893-F129-4E1C-8A1C-480D82CC1C06} = {639772BA-788D-4C7D-93C0-A3DFBBB87EE5}
+		{639772BA-788D-4C7D-93C0-A3DFBBB87EE5} = {8BF90F4F-766B-4B4D-B7F3-BF4189A29F4E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {98BC2259-260D-4CB1-B4A6-FAAA2DC3E91B}
