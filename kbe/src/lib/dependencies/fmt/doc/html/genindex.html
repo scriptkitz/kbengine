@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     
-    <title>Index &mdash; fmt 5.2.1 documentation</title>
+    <title>Index &mdash; fmt 7.1.3 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '5.2.1',
+        VERSION:     '7.1.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -33,14 +33,13 @@
 <meta name="author" content="Victor Zverovich">
 <link rel="stylesheet" href="_static/fmt.css">
 
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-20116650-4"></script>
 <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();
-    a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;
-    a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-20116650-4', 'fmtlib.net');
-  ga('send', 'pageview');
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-20116650-4');
 </script>
 
   </head>
@@ -66,15 +65,15 @@
           <ul class="nav navbar-nav">
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                 role="button" aria-expanded="false">5.2.1
+                 role="button" aria-expanded="false">7.1.3
                 <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 
-                <li><a href="http://fmtlib.net/5.2.1">5.2.1</a></li>
+                <li><a href="https://fmt.dev/7.1.3">7.1.3</a></li>
                 
-                <li><a href="http://fmtlib.net/5.2.0">5.2.0</a></li>
+                <li><a href="https://fmt.dev/7.1.2">7.1.2</a></li>
                 
-                <li><a href="http://fmtlib.net/5.1.0">5.1.0</a></li>
+                <li><a href="https://fmt.dev/7.1.1">7.1.1</a></li>
                 
               </ul>
             </li>
@@ -134,23 +133,7 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="api.html#c.fmt">fmt (C macro)</a>
-  </dt>
-
-      
-  <dt><a href="api.html#_CPPv2N3fmt3argE11string_viewRK1T">fmt::arg (C++ function)</a>
-  </dt>
-
-      
-  <dt><a href="api.html#_CPPv2N3fmt13arg_formatterE">fmt::arg_formatter (C++ class)</a>
-  </dt>
-
-      
-  <dt><a href="api.html#_CPPv2N3fmt13arg_formatter13arg_formatterER12context_typeP12format_specs">fmt::arg_formatter::arg_formatter (C++ function)</a>
-  </dt>
-
-      
-  <dt><a href="api.html#_CPPv2N3fmt13arg_formatterclEN16basic_format_argI12context_typeE6handleE">fmt::arg_formatter::operator() (C++ function)</a>
+  <dt><a href="api.html#_CPPv2N3fmt3argEPK4CharRK1T">fmt::arg (C++ function)</a>
   </dt>
 
       
@@ -162,11 +145,35 @@
   </dt>
 
       
-  <dt><a href="api.html#_CPPv2N3fmt17basic_format_args17basic_format_argsEPK10format_arg9size_type">fmt::basic_format_args::basic_format_args (C++ function)</a>, <a href="api.html#_CPPv2N3fmt17basic_format_args17basic_format_argsERK16format_arg_storeI7ContextDp4ArgsE">[1]</a>
+  <dt><a href="api.html#_CPPv2N3fmt17basic_format_args17basic_format_argsEPK10format_argi">fmt::basic_format_args::basic_format_args (C++ function)</a>, <a href="api.html#_CPPv2N3fmt17basic_format_args17basic_format_argsERK16format_arg_storeI7ContextDp4ArgsE">[1]</a>, <a href="api.html#_CPPv2N3fmt17basic_format_args17basic_format_argsERK24dynamic_format_arg_storeI7ContextE">[2]</a>
   </dt>
 
       
-  <dt><a href="api.html#_CPPv2NK3fmt17basic_format_args3getE9size_type">fmt::basic_format_args::get (C++ function)</a>
+  <dt><a href="api.html#_CPPv2NK3fmt17basic_format_args3getEi">fmt::basic_format_args::get (C++ function)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt26basic_format_parse_contextE">fmt::basic_format_parse_context (C++ class)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt26basic_format_parse_context10advance_toE8iterator">fmt::basic_format_parse_context::advance_to (C++ function)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2NK3fmt26basic_format_parse_context5beginEv">fmt::basic_format_parse_context::begin (C++ function)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt26basic_format_parse_context12check_arg_idEi">fmt::basic_format_parse_context::check_arg_id (C++ function)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2NK3fmt26basic_format_parse_context3endEv">fmt::basic_format_parse_context::end (C++ function)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt26basic_format_parse_context11next_arg_idEv">fmt::basic_format_parse_context::next_arg_id (C++ function)</a>
   </dt>
 
       
@@ -178,7 +185,19 @@
   </dt>
 
       
+  <dt><a href="api.html#_CPPv2N3fmt19basic_memory_buffer4growE6size_t">fmt::basic_memory_buffer::grow (C++ function)</a>
+  </dt>
+
+      
   <dt><a href="api.html#_CPPv2N3fmt19basic_memory_bufferaSERR19basic_memory_buffer">fmt::basic_memory_buffer::operator= (C++ function)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt19basic_memory_buffer7reserveE6size_t">fmt::basic_memory_buffer::reserve (C++ function)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt19basic_memory_buffer6resizeE6size_t">fmt::basic_memory_buffer::resize (C++ function)</a>
   </dt>
 
       
@@ -186,7 +205,7 @@
   </dt>
 
       
-  <dt><a href="api.html#_CPPv2N3fmt17basic_string_view17basic_string_viewEPK4Char">fmt::basic_string_view::basic_string_view (C++ function)</a>, <a href="api.html#_CPPv2N3fmt17basic_string_view17basic_string_viewEPK4Char6size_t">[1]</a>, <a href="api.html#_CPPv2N3fmt17basic_string_view17basic_string_viewERKNSt12basic_stringI4Char5AllocEE">[2]</a>
+  <dt><a href="api.html#_CPPv2N3fmt17basic_string_view17basic_string_viewEPK4Char">fmt::basic_string_view::basic_string_view (C++ function)</a>, <a href="api.html#_CPPv2N3fmt17basic_string_view17basic_string_viewEPK4Char6size_t">[1]</a>, <a href="api.html#_CPPv2N3fmt17basic_string_view17basic_string_viewERKNSt12basic_stringI4Char6Traits5AllocEE">[2]</a>
   </dt>
 
       
@@ -198,7 +217,53 @@
   </dt>
 
       
-  <dt><a href="api.html#_CPPv2N3fmt6formatERK6StringDpRK4Args">fmt::format (C++ function)</a>
+  <dt><a href="api.html#_CPPv2N3fmt13buffered_file6vprintE11string_view11format_args">fmt::buffered_file::vprint (C++ function)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt6detail6bufferE">fmt::detail::buffer (C++ class)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt6detail6buffer6appendEPK1UPK1U">fmt::detail::buffer::append (C++ function)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2NK3fmt6detail6buffer8capacityEv">fmt::detail::buffer::capacity (C++ function)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt6detail6buffer5clearEv">fmt::detail::buffer::clear (C++ function)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt6detail6buffer4dataEv">fmt::detail::buffer::data (C++ function)</a>, <a href="api.html#_CPPv2NK3fmt6detail6buffer4dataEv">[1]</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2NK3fmt6detail6buffer4sizeEv">fmt::detail::buffer::size (C++ function)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt24dynamic_format_arg_storeE">fmt::dynamic_format_arg_store (C++ class)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt24dynamic_format_arg_store5clearEv">fmt::dynamic_format_arg_store::clear (C++ function)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt24dynamic_format_arg_store9push_backENSt17reference_wrapperI1TEE">fmt::dynamic_format_arg_store::push_back (C++ function)</a>, <a href="api.html#_CPPv2N3fmt24dynamic_format_arg_store9push_backERK1T">[1]</a>, <a href="api.html#_CPPv2N3fmt24dynamic_format_arg_store9push_backERKN6detail9named_argI9char_type1TEE">[2]</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt24dynamic_format_arg_store7reserveE6size_t6size_t">fmt::dynamic_format_arg_store::reserve (C++ function)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="api.html#_CPPv2N3fmt6formatERK1SDpRR4Args">fmt::format (C++ function)</a>
   </dt>
 
       
@@ -210,17 +275,15 @@
   </dt>
 
       
-  <dt><a href="api.html#_CPPv2N3fmt19format_system_errorERN8internal6bufferEiN3fmt11string_viewE">fmt::format_system_error (C++ function)</a>
+  <dt><a href="api.html#_CPPv2N3fmt19format_system_errorERN6detail6bufferIcEEi11string_view">fmt::format_system_error (C++ function)</a>
   </dt>
 
       
-  <dt><a href="api.html#_CPPv2N3fmt9format_toE8OutputIt11string_viewDpRK4Args">fmt::format_to (C++ function)</a>
+  <dt><a href="api.html#_CPPv2N3fmt9format_toE8OutputItRK1SDpRR4Args">fmt::format_to (C++ function)</a>, <a href="api.html#_CPPv2N3fmt9format_toE8OutputItRK1SDpRR4Args">[1]</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="api.html#_CPPv2N3fmt11format_to_nE8OutputItNSt6size_tE11string_viewDpRK4Args">fmt::format_to_n (C++ function)</a>
+  <dt><a href="api.html#_CPPv2N3fmt11format_to_nE8OutputIt6size_tRK1SDpRK4Args">fmt::format_to_n (C++ function)</a>, <a href="api.html#_CPPv2N3fmt11format_to_nE8OutputIt6size_tRK1SDpRK4Args">[1]</a>
   </dt>
 
       
@@ -236,11 +299,31 @@
   </dt>
 
       
-  <dt><a href="api.html#_CPPv2N3fmt14formatted_sizeE11string_viewDpRK4Args">fmt::formatted_size (C++ function)</a>
+  <dt><a href="api.html#_CPPv2N3fmt14formatted_sizeE11string_viewDpRR4Args">fmt::formatted_size (C++ function)</a>
   </dt>
 
       
-  <dt><a href="api.html#_CPPv2N3fmt7fprintfEPNSt4FILEE11string_viewDpRK4Args">fmt::fprintf (C++ function)</a>, <a href="api.html#_CPPv2N3fmt7fprintfERNSt7ostreamE11string_viewDpRK4Args">[1]</a>
+  <dt><a href="api.html#_CPPv2N3fmt7fprintfEPNSt4FILEERK1SDpRK4Args">fmt::fprintf (C++ function)</a>, <a href="api.html#_CPPv2N3fmt7fprintfERNSt13basic_ostreamI4CharEERK1SDpRK4Args">[1]</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt7is_charE">fmt::is_char (C++ class)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt4joinE2It8Sentinel11string_view">fmt::join (C++ function)</a>, <a href="api.html#_CPPv2N3fmt4joinERR5Range11string_view">[1]</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt8literalsli2_aEPKc6size_t">fmt::literals::operator&#34;&#34;_a (C++ function)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt8literalsli7_formatEPKc6size_t">fmt::literals::operator&#34;&#34;_format (C++ function)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#_CPPv2N3fmt17make_args_checkedERK1SDpRK18remove_reference_tI4ArgsE">fmt::make_args_checked (C++ function)</a>
   </dt>
 
       
@@ -248,19 +331,19 @@
   </dt>
 
       
-  <dt><a href="api.html#_CPPv2N3fmt5printE11string_viewDpRK4Args">fmt::print (C++ function)</a>, <a href="api.html#_CPPv2N3fmt5printEPNSt4FILEE11string_viewDpRK4Args">[1]</a>, <a href="api.html#_CPPv2N3fmt5printEPNSt4FILEE12wstring_viewDpRK4Args">[2]</a>, <a href="api.html#_CPPv2N3fmt5printERNSt7ostreamE11string_viewDpRK4Args">[3]</a>
+  <dt><a href="api.html#_CPPv2N3fmt5printEPNSt4FILEERK1SDpRR4Args">fmt::print (C++ function)</a>, <a href="api.html#_CPPv2N3fmt5printERK10text_styleRK1SDpRK4Args">[1]</a>, <a href="api.html#_CPPv2N3fmt5printERK1SDpRR4Args">[2]</a>, <a href="api.html#_CPPv2N3fmt5printERNSt13basic_ostreamI4CharEERK1SDpRR4Args">[3]</a>
   </dt>
 
       
-  <dt><a href="api.html#_CPPv2N3fmt6printfE11string_viewDpRK4Args">fmt::printf (C++ function)</a>
+  <dt><a href="api.html#_CPPv2N3fmt6printfERK1SDpRK4Args">fmt::printf (C++ function)</a>
   </dt>
 
       
-  <dt><a href="api.html#_CPPv2N3fmt7sprintfE11string_viewDpRK4Args">fmt::sprintf (C++ function)</a>
+  <dt><a href="api.html#_CPPv2N3fmt3ptrEPK1T">fmt::ptr (C++ function)</a>, <a href="api.html#_CPPv2N3fmt3ptrERKNSt10shared_ptrI1TEE">[1]</a>, <a href="api.html#_CPPv2N3fmt3ptrERKNSt10unique_ptrI1TEE">[2]</a>
   </dt>
 
       
-  <dt><a href="api.html#_CPPv2N3fmt11string_viewE">fmt::string_view (C++ type)</a>
+  <dt><a href="api.html#_CPPv2N3fmt7sprintfERK1SDpRK4Args">fmt::sprintf (C++ function)</a>
   </dt>
 
       
@@ -276,15 +359,19 @@
   </dt>
 
       
+  <dt><a href="api.html#_CPPv2N3fmt14to_string_viewEPK4Char">fmt::to_string_view (C++ function)</a>
+  </dt>
+
+      
   <dt><a href="api.html#_CPPv2N3fmt10to_wstringERK1T">fmt::to_wstring (C++ function)</a>
   </dt>
 
       
-  <dt><a href="api.html#_CPPv2N3fmt7vformatERK6String17basic_format_argsIN14buffer_contextI4CharE4typeEE">fmt::vformat (C++ function)</a>
+  <dt><a href="api.html#_CPPv2N3fmt7vformatERK1S17basic_format_argsI14buffer_contextI15type_identity_tI4CharEEE">fmt::vformat (C++ function)</a>
   </dt>
 
       
-  <dt><a href="api.html#_CPPv2N3fmt6vprintE11string_view11format_args">fmt::vprint (C++ function)</a>, <a href="api.html#_CPPv2N3fmt6vprintEPNSt4FILEE11string_view11format_args">[1]</a>, <a href="api.html#_CPPv2N3fmt6vprintEPNSt4FILEE12wstring_view12wformat_args">[2]</a>
+  <dt><a href="api.html#_CPPv2N3fmt6vprintEPNSt4FILEE11string_view11format_args">fmt::vprint (C++ function)</a>
   </dt>
 
       
@@ -296,7 +383,11 @@
   </dt>
 
       
-  <dt><a href="api.html#_CPPv2N3fmt12wstring_viewE">fmt::wstring_view (C++ type)</a>
+  <dt><a href="api.html#c.FMT_COMPILE">FMT_COMPILE (C macro)</a>
+  </dt>
+
+      
+  <dt><a href="api.html#c.FMT_STRING">FMT_STRING (C macro)</a>
   </dt>
 
   </dl></td>

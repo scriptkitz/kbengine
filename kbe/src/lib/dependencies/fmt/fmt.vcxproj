@@ -19,10 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\posix.cpp" />
-    <ClCompile Include="src\format.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="include\fmt\color.h" />
     <ClInclude Include="include\fmt\core.h" />
     <ClInclude Include="include\fmt\format.h" />
@@ -32,6 +28,10 @@
     <ClInclude Include="include\fmt\printf.h" />
     <ClInclude Include="include\fmt\ranges.h" />
     <ClInclude Include="include\fmt\time.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\format.cc" />
+    <ClCompile Include="src\os.cc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{13E95053-54B3-497B-9DDB-3430B1C1B6BF}</ProjectGuid>

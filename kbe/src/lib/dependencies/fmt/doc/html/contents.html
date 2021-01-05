@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     
-    <title>Contents &mdash; fmt 5.2.1 documentation</title>
+    <title>Contents &mdash; fmt 7.1.3 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,7 +17,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '5.2.1',
+        VERSION:     '7.1.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -33,14 +33,13 @@
 <meta name="author" content="Victor Zverovich">
 <link rel="stylesheet" href="_static/fmt.css">
 
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-20116650-4"></script>
 <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();
-    a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;
-    a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-20116650-4', 'fmtlib.net');
-  ga('send', 'pageview');
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-20116650-4');
 </script>
 
   </head>
@@ -66,15 +65,15 @@
           <ul class="nav navbar-nav">
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                 role="button" aria-expanded="false">5.2.1
+                 role="button" aria-expanded="false">7.1.3
                 <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 
-                <li><a href="http://fmtlib.net/5.2.1">5.2.1</a></li>
+                <li><a href="https://fmt.dev/7.1.3">7.1.3</a></li>
                 
-                <li><a href="http://fmtlib.net/5.2.0">5.2.0</a></li>
+                <li><a href="https://fmt.dev/7.1.2">7.1.2</a></li>
                 
-                <li><a href="http://fmtlib.net/5.1.0">5.1.0</a></li>
+                <li><a href="https://fmt.dev/7.1.1">7.1.1</a></li>
                 
               </ul>
             </li>
@@ -129,9 +128,14 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#building-the-library">Building the library</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#header-only-usage-with-cmake">Header-only usage with CMake</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#building-the-documentation">Building the documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#building-the-library">Building the Library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#installing-the-library">Installing the Library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#usage-with-cmake">Usage with CMake</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#usage-with-build2">Usage with build2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#building-the-documentation">Building the Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#conda">Conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#vcpkg">Vcpkg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#lhelper">LHelper</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html#android-ndk">Android NDK</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html#homebrew">Homebrew</a></li>
 </ul>
@@ -139,14 +143,18 @@
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api.html#core-api">Core API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#format-api">Format API</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#date-and-time-formatting">Date and time formatting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#std-ostream-support"><code class="docutils literal"><span class="pre">std::ostream</span></code> support</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#printf-formatting"><code class="docutils literal"><span class="pre">printf</span></code> formatting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#ranges-and-tuple-formatting">Ranges and Tuple Formatting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#date-and-time-formatting">Date and Time Formatting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#format-string-compilation">Format string compilation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#terminal-color-and-text-style">Terminal color and text style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#std-ostream-support"><code class="docutils literal"><span class="pre">std::ostream</span></code> Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#printf-formatting"><code class="docutils literal"><span class="pre">printf</span></code> Formatting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#compatibility-with-c-20-std-format">Compatibility with C++20 <code class="docutils literal"><span class="pre">std::format</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="syntax.html">Format String Syntax</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="syntax.html#format-specification-mini-language">Format Specification Mini-Language</a></li>
-<li class="toctree-l2"><a class="reference internal" href="syntax.html#format-examples">Format examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="syntax.html#format-examples">Format Examples</a></li>
 </ul>
 </li>
 </ul>
