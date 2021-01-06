@@ -21,6 +21,7 @@
 #include "serverconfig.h"
 #include "helper/debug_helper.h"
 #include "common/common.h"
+#include "common/sol_lua.h"
 #include "common/memorystream.h"
 #include "common/timer.h"
 #include "pyscript/pyobject_pointer.h"

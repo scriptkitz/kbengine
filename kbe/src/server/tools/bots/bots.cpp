@@ -42,12 +42,11 @@ reqCreateAndLoginTotalCount_(g_kbeSrvConfig.getBots().defaultAddBots_totalCount)
 reqCreateAndLoginTickCount_(g_kbeSrvConfig.getBots().defaultAddBots_tickCount),
 reqCreateAndLoginTickTime_(g_kbeSrvConfig.getBots().defaultAddBots_tickTime),
 pCreateAndLoginHandler_(NULL),
-pEventPoller_(Network::EventPoller::create()),
 pTelnetServer_(NULL)
 {
 	// 初始化EntityDef模块获取entity实体函数地址
-	EntityDef::setGetEntityFunc(std::tr1::bind(&Bots::tryGetEntity, this,
-		std::tr1::placeholders::_1, std::tr1::placeholders::_2));
+	EntityDef::setGetEntityFunc(std::bind(&Bots::tryGetEntity, this,
+		std::placeholders::_1, std::placeholders::_2));
 
 	KBEngine::Network::MessageHandlers::pMainMessageHandlers = &BotsInterface::messageHandlers;
 	Components::getSingleton().initialize(&ninterface, componentType, componentID);
@@ -57,7 +56,6 @@ pTelnetServer_(NULL)
 Bots::~Bots()
 {
 	Components::getSingleton().finalise();
-	SAFE_RELEASE(pEventPoller_);
 }
 
 //-------------------------------------------------------------------------------------
@@ -183,27 +181,27 @@ bool Bots::installPyModules()
 
 	// 注册设置脚本输出类型
 	APPEND_SCRIPT_MODULE_METHOD(getScript().getModule(),	scriptLogType,	__py_setScriptLogType,	METH_VARARGS,	0)
-	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_NORMAL", log4cxx::ScriptLevel::SCRIPT_INT))
+	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_TRACE", spdlog::level::trace))
 	{
-		ERROR_MSG( "Bots::installPyModules: Unable to set KBEngine.LOG_TYPE_NORMAL.\n");
+		ERROR_MSG( "Bots::installPyModules: Unable to set KBEngine.LOG_TYPE_TRACE.\n");
 	}
 
-	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_INFO", log4cxx::ScriptLevel::SCRIPT_INFO))
+	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_INFO", spdlog::level::info))
 	{
 		ERROR_MSG( "Bots::installPyModules: Unable to set KBEngine.LOG_TYPE_INFO.\n");
 	}
 
-	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_ERR", log4cxx::ScriptLevel::SCRIPT_ERR))
+	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_ERR", spdlog::level::err))
 	{
 		ERROR_MSG( "Bots::installPyModules: Unable to set KBEngine.LOG_TYPE_ERR.\n");
 	}
 
-	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_DBG", log4cxx::ScriptLevel::SCRIPT_DBG))
+	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_DBG", spdlog::level::debug))
 	{
 		ERROR_MSG( "Bots::installPyModules: Unable to set KBEngine.LOG_TYPE_DBG.\n");
 	}
 
-	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_WAR", log4cxx::ScriptLevel::SCRIPT_WAR))
+	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_WAR", spdlog::level::warn))
 	{
 		ERROR_MSG( "Bots::installPyModules: Unable to set KBEngine.LOG_TYPE_WAR.\n");
 	}
@@ -270,8 +268,7 @@ void Bots::handleGameTick()
 	// DEBUG_MSG(fmt::format("Bots::handleGameTick[{}]:{}\n", t, ++kbeTime));
 
 	ClientApp::handleGameTick();
-
-	pEventPoller_->processPendingEvents(0.0);
+	this->dispatcher().processNetwork(true);
 
 	{
 		AUTO_SCOPED_PROFILE("updateBots");

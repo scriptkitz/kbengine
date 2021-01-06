@@ -159,8 +159,6 @@ public:
 	*/
 	virtual void onCreateAccountResult(Network::Channel * pChannel, MemoryStream& s);
 
-	Network::EventPoller* pEventPoller(){ return pEventPoller_; }
-
 	/** 网络接口
 	   登录失败回调
 	   @failedcode: 失败返回码 NETWORK_ERR_SRV_NO_READY:服务器没有准备好, 
@@ -372,8 +370,6 @@ protected:
 
 	// 处理创建与登录的handler
 	CreateAndLoginHandler*									pCreateAndLoginHandler_;
-
-	Network::EventPoller*									pEventPoller_;
 
 	TelnetServer*											pTelnetServer_;
 };

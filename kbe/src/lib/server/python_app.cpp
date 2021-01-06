@@ -295,27 +295,27 @@ bool PythonApp::installPyModules()
 	// debug追踪kbe封装的py对象计数
 	APPEND_SCRIPT_MODULE_METHOD(module, debugTracing, script::PyGC::__py_debugTracing, METH_VARARGS, 0);
 
-	if (PyModule_AddIntConstant(module, "LOG_TYPE_NORMAL", log4cxx::ScriptLevel::SCRIPT_INT))
+	if (PyModule_AddIntConstant(module, "LOG_TYPE_TRACE", spdlog::level::trace))
 	{
-		ERROR_MSG( "PythonApp::installPyModules: Unable to set KBEngine.LOG_TYPE_NORMAL.\n");
+		ERROR_MSG( "PythonApp::installPyModules: Unable to set KBEngine.LOG_TYPE_TRACE.\n");
 	}
 
-	if (PyModule_AddIntConstant(module, "LOG_TYPE_INFO", log4cxx::ScriptLevel::SCRIPT_INFO))
+	if (PyModule_AddIntConstant(module, "LOG_TYPE_INFO", spdlog::level::info))
 	{
 		ERROR_MSG( "PythonApp::installPyModules: Unable to set KBEngine.LOG_TYPE_INFO.\n");
 	}
 
-	if (PyModule_AddIntConstant(module, "LOG_TYPE_ERR", log4cxx::ScriptLevel::SCRIPT_ERR))
+	if (PyModule_AddIntConstant(module, "LOG_TYPE_ERR", spdlog::level::err))
 	{
 		ERROR_MSG( "PythonApp::installPyModules: Unable to set KBEngine.LOG_TYPE_ERR.\n");
 	}
 
-	if (PyModule_AddIntConstant(module, "LOG_TYPE_DBG", log4cxx::ScriptLevel::SCRIPT_DBG))
+	if (PyModule_AddIntConstant(module, "LOG_TYPE_DBG", spdlog::level::debug))
 	{
 		ERROR_MSG( "PythonApp::installPyModules: Unable to set KBEngine.LOG_TYPE_DBG.\n");
 	}
 
-	if (PyModule_AddIntConstant(module, "LOG_TYPE_WAR", log4cxx::ScriptLevel::SCRIPT_WAR))
+	if (PyModule_AddIntConstant(module, "LOG_TYPE_WAR", spdlog::level::warn))
 	{
 		ERROR_MSG( "PythonApp::installPyModules: Unable to set KBEngine.LOG_TYPE_WAR.\n");
 	}

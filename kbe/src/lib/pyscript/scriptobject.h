@@ -3,20 +3,18 @@
 #ifndef KBE_SCRIPTOBJECT_H
 #define KBE_SCRIPTOBJECT_H
 
-#include <vector>	
+#include <vector>
 #include "Python.h"     
 #include "py_macros.h" 
 #include "helper/debug_helper.h"
 #include "common/common.h"
+#include "common/sol_lua.h"
 #include <structmember.h>
 #include <assert.h>
 
 namespace KBEngine{ namespace script{
-
 // python的默认空返回值
 #define S_Return { Py_INCREF(Py_None); return Py_None; }			
-#define S_RETURN S_Return	
-#define PY_RETURN S_Return	
 
 #define S_INCREF(pyObj)																		\
 	if(pyObj){																				\

@@ -249,7 +249,7 @@ int kbeMainT(int argc, char * argv[], COMPONENT_TYPE componentType,
 	}
 	
 	DebugHelper::initialize(componentType);
-	INFO_MSG( "-----------------------------------------------------------------------------------------\n\n\n");
+	INFO_MSG( "/-----------------------------------------------------------------------------------------\\\n\n");
 
 	Network::EventDispatcher dispatcher;
 	DebugHelper::getSingleton().pDispatcher(&dispatcher);

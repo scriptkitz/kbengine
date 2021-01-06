@@ -58,8 +58,8 @@ state_(C_STATE_INIT)
 	networkInterface_.pChannelDeregisterHandler(this);
 
 	// 初始化entityCall模块获取channel函数地址
-	EntityCallAbstract::setFindChannelFunc(std::tr1::bind(&ClientApp::findChannelByEntityCall, this,
-		std::tr1::placeholders::_1));
+	EntityCallAbstract::setFindChannelFunc(std::bind(&ClientApp::findChannelByEntityCall, this,
+		std::placeholders::_1));
 
 	KBEngine::Network::MessageHandlers::pMainMessageHandlers = &ClientInterface::messageHandlers;
 
@@ -238,27 +238,27 @@ bool ClientApp::installPyModules()
 
 	// 注册设置脚本输出类型
 	APPEND_SCRIPT_MODULE_METHOD(getScript().getModule(),	scriptLogType,	__py_setScriptLogType,	METH_VARARGS,	0)
-	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_NORMAL", log4cxx::ScriptLevel::SCRIPT_INT))
+	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_TRACE", spdlog::level::trace))
 	{
-		ERROR_MSG( "ClientApp::installPyModules: Unable to set KBEngine.LOG_TYPE_NORMAL.\n");
+		ERROR_MSG( "ClientApp::installPyModules: Unable to set KBEngine.LOG_TYPE_TRACE.\n");
 	}
 
-	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_INFO", log4cxx::ScriptLevel::SCRIPT_INFO))
+	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_INFO", spdlog::level::info))
 	{
 		ERROR_MSG( "ClientApp::installPyModules: Unable to set KBEngine.LOG_TYPE_INFO.\n");
 	}
 
-	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_ERR", log4cxx::ScriptLevel::SCRIPT_ERR))
+	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_ERR", spdlog::level::err))
 	{
 		ERROR_MSG( "ClientApp::installPyModules: Unable to set KBEngine.LOG_TYPE_ERR.\n");
 	}
 
-	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_DBG", log4cxx::ScriptLevel::SCRIPT_DBG))
+	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_DBG", spdlog::level::debug))
 	{
 		ERROR_MSG( "ClientApp::installPyModules: Unable to set KBEngine.LOG_TYPE_DBG.\n");
 	}
 
-	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_WAR", log4cxx::ScriptLevel::SCRIPT_WAR))
+	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_WAR", spdlog::level::warn))
 	{
 		ERROR_MSG( "ClientApp::installPyModules: Unable to set KBEngine.LOG_TYPE_WAR.\n");
 	}

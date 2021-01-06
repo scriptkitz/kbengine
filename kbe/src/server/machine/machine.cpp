@@ -449,7 +449,7 @@ void Machine::queryComponentID(Network::Channel* pChannel, COMPONENT_TYPE compon
 void Machine::removeComponentID(COMPONENT_TYPE componentType, COMPONENT_ID componentID, int32 uid)
 {
 	INFO_MSG(fmt::format("Machine::removeComponentID: component={}({}), uid={} \n", 
-		COMPONENT_NAME[componentType], componentID, uid));
+		COMPONENT_NAME.at(componentType), componentID, uid));
 
 	std::map<int32, CID_MAP>::iterator iter = cidMap_.find(uid);
 	if (iter != cidMap_.end())
@@ -980,7 +980,7 @@ void Machine::stopserver(Network::Channel* pChannel, KBEngine::MemoryStream& s)
 			}
 
 			INFO_MSG(fmt::format("--> stop {}({}), addr={}\n", 
-				(*iter).cid, COMPONENT_NAME[componentType], (cinfos->pIntAddr != NULL ? cinfos->pIntAddr->c_str() : "unknown")));
+				(*iter).cid, COMPONENT_NAME.at(componentType), (cinfos->pIntAddr != NULL ? cinfos->pIntAddr->c_str() : "unknown")));
 
 			bool usable = checkComponentUsable(&(*iter), false, false);
 		
@@ -1035,7 +1035,7 @@ void Machine::stopserver(Network::Channel* pChannel, KBEngine::MemoryStream& s)
 			{
 				// 超时, 可能对方繁忙
 				ERROR_MSG(fmt::format("--> stop {}({}), addr={}, timeout!\n", 
-					(*iter).cid, COMPONENT_NAME[componentType], (cinfos->pIntAddr != NULL ? 
+					(*iter).cid, COMPONENT_NAME.at(componentType), (cinfos->pIntAddr != NULL ? 
 					cinfos->pIntAddr->c_str() : "unknown")));
 
 				iter++;
@@ -1044,7 +1044,7 @@ void Machine::stopserver(Network::Channel* pChannel, KBEngine::MemoryStream& s)
 			else if(selgot == -1)
 			{
 				WARNING_MSG(fmt::format("--> stop {}({}), addr={}, recv_len == -1!\n", 
-					(*iter).cid, COMPONENT_NAME[componentType], (cinfos->pIntAddr != NULL ? 
+					(*iter).cid, COMPONENT_NAME.at(componentType), (cinfos->pIntAddr != NULL ? 
 					cinfos->pIntAddr->c_str() : "unknown")));
 
 				iter++;
@@ -1057,7 +1057,7 @@ void Machine::stopserver(Network::Channel* pChannel, KBEngine::MemoryStream& s)
 			if(len != 1)
 			{
 				ERROR_MSG(fmt::format("--> stop {}({}), addr={}, recv_len != 1!\n", 
-					(*iter).cid, COMPONENT_NAME[componentType], (cinfos->pIntAddr != NULL ? 
+					(*iter).cid, COMPONENT_NAME.at(componentType), (cinfos->pIntAddr != NULL ? 
 					cinfos->pIntAddr->c_str() : "unknown")));
 
 				success = false;
@@ -1164,7 +1164,7 @@ void Machine::killserver(Network::Channel* pChannel, KBEngine::MemoryStream& s)
 			}
 
 			INFO_MSG(fmt::format("--> kill {}({}), addr={}\n",
-				(*iter).cid, COMPONENT_NAME[componentType], (cinfos->pIntAddr != NULL ? cinfos->pIntAddr->c_str() : "unknown")));
+				(*iter).cid, COMPONENT_NAME.at(componentType), (cinfos->pIntAddr != NULL ? cinfos->pIntAddr->c_str() : "unknown")));
 
 			int killtry = 0;
 			bool killed = false;

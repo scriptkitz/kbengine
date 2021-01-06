@@ -8,6 +8,7 @@
 #include "serverapp.h"
 #include "Python.h"
 #include "common/common.h"
+#include "common/sol_lua.h"
 #include "common/kbekey.h"
 #include "common/stringconv.h"
 #include "helper/debug_helper.h"

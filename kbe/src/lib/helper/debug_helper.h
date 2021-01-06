@@ -13,6 +13,15 @@
 #include "network/common.h"
 #include "network/address.h"
 
+#ifndef NO_USE_LOG4CXX
+#include "spdlog/spdlog.h"
+#include "spdlog/async.h"
+#include "spdlog/common.h"
+#include "spdlog/sinks/stdout_sinks.h"
+#include "spdlog/sinks/daily_file_sink.h"
+#include "spdlog/sinks/basic_file_sink.h"
+#endif
+
 namespace KBEngine{
 
 namespace Network{
@@ -158,8 +167,6 @@ public:
 	void setScriptMsgType(int msgtype);
 	void resetScriptMsgType();
 
-	void shouldWriteToSyslog(bool v = true);
-
 	/** 
 		同步日志到logger
 	*/
@@ -187,7 +194,7 @@ private:
 	Network::NetworkInterface* pNetworkInterface_;
 	Network::EventDispatcher* pDispatcher_;
 
-	int scriptMsgType_;
+	spdlog::level::level_enum scriptMsgType_;
 
 	bool noSyncLog_;
 

@@ -95,7 +95,7 @@ extern COMPONENT_TYPE g_componentType;
 extern COMPONENT_ID g_componentID;
 
 /** 定义服务器各组件名称 */
-const char COMPONENT_NAME[][255] = {
+const std::vector<const char*> COMPONENT_NAME = {
 	"unknown",
 	"dbmgr",
 	"loginapp",
@@ -113,7 +113,7 @@ const char COMPONENT_NAME[][255] = {
 	"tool",
 };
 
-const char COMPONENT_NAME_1[][255] = {
+const char COMPONENT_NAME_1[][32] = {
 	"unknown   ",
 	"dbmgr     ",
 	"loginapp  ",
@@ -131,7 +131,7 @@ const char COMPONENT_NAME_1[][255] = {
 	"tool      ",
 };
 
-const char COMPONENT_NAME_2[][255] = {
+const char COMPONENT_NAME_2[][32] = {
 	"   unknown",
 	"     dbmgr",
 	"  loginapp",
@@ -153,10 +153,9 @@ inline const char* COMPONENT_NAME_EX(COMPONENT_TYPE CTYPE)
 {									
 	if(CTYPE < 0 || CTYPE >= COMPONENT_END_TYPE)
 	{
-		return COMPONENT_NAME[UNKNOWN_COMPONENT_TYPE];
+		return COMPONENT_NAME.at(UNKNOWN_COMPONENT_TYPE);
 	}
-
-	return COMPONENT_NAME[CTYPE];
+	return COMPONENT_NAME.at(CTYPE);
 }
 
 inline const char* COMPONENT_NAME_EX_1(COMPONENT_TYPE CTYPE)
@@ -165,7 +164,6 @@ inline const char* COMPONENT_NAME_EX_1(COMPONENT_TYPE CTYPE)
 	{
 		return COMPONENT_NAME_1[UNKNOWN_COMPONENT_TYPE];
 	}
-
 	return COMPONENT_NAME_1[CTYPE];
 }
 
@@ -183,8 +181,8 @@ inline COMPONENT_TYPE ComponentName2ComponentType(const char* name)
 {
 	for(int i=0; i<(int)COMPONENT_END_TYPE; ++i)
 	{
-		if(kbe_stricmp(COMPONENT_NAME[i], name) == 0)
-			return (COMPONENT_TYPE)i;
+		if(kbe_stricmp(COMPONENT_NAME.at(i), name) == 0)
+			return COMPONENT_TYPE(i);
 	}
 
 	return UNKNOWN_COMPONENT_TYPE;
@@ -402,8 +400,8 @@ inline bool validName(const std::string& name)
 inline bool email_isvalid(const char *address) 
 {
 #ifdef USE_REGEX
-	std::tr1::regex _mail_pattern("^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})$");
-	return std::tr1::regex_match(address, _mail_pattern);
+	std::regex _mail_pattern("^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})$");
+	return std::regex_match(address, _mail_pattern);
 #endif
 	int len = (int)strlen(address);
 	if(len <= 3)

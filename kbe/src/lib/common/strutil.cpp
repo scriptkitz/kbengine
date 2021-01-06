@@ -76,13 +76,13 @@ namespace strutil {
 
 	std::string &kbe_ltrim(std::string &s) 
 	{
-		s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+		s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int c) { return !std::isspace(c); }));
 		return s;
 	}
 
 	std::string &kbe_rtrim(std::string &s) 
 	{
-		s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+		s.erase(std::find_if(s.rbegin(), s.rend(), [](int c) { return !std::isspace(c); }).base(), s.end());
 		return s;
 	}
 
@@ -288,7 +288,7 @@ namespace strutil {
 			return utf8::distance(utf8str.c_str(), 
 				utf8str.c_str() + utf8str.size());
 		}
-		catch (std::exception& e)
+		catch (std::exception& /*e*/)
 		{
 			utf8str = "";
 			return 0;
@@ -315,7 +315,7 @@ namespace strutil {
 
 			utf8str.resize(oend - (&utf8str[0]));
 		}
-		catch (std::exception& e)
+		catch (std::exception& /*e*/)
 		{
 			utf8str = "";
 		}
@@ -340,7 +340,7 @@ namespace strutil {
 			utf8::utf8to16(utf8str, utf8str + csize, wstr);
 			wstr[len] = L'\0';
 		}
-		catch (std::exception& e)
+		catch (std::exception& /*e*/)
 		{
 			if (wsize > 0)
 				wstr[0] = L'\0';
@@ -363,7 +363,7 @@ namespace strutil {
 				utf8::utf8to16(utf8str.c_str(), 
 				utf8str.c_str() + utf8str.size(), &wstr[0]);
 		}
-		catch (std::exception& e)
+		catch (std::exception& /*e*/)
 		{
 			wstr = L"";
 			return false;
@@ -383,7 +383,7 @@ namespace strutil {
 			utf8str2.resize(oend - (&utf8str2[0]));             // remove unused tail
 			utf8str = utf8str2;
 		}
-		catch (std::exception& e)
+		catch (std::exception& /*e*/)
 		{
 			utf8str = "";
 			return false;
@@ -405,7 +405,7 @@ namespace strutil {
 			utf8str2.resize(oend - (&utf8str2[0]));             // remove unused tail
 			utf8str = utf8str2;
 		}
-		catch (std::exception& e)
+		catch (std::exception& /*e*/)
 		{
 			utf8str = "";
 			return false;
