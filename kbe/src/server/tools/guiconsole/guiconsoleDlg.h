@@ -13,9 +13,9 @@
 #include "GraphsWindow.h"
 #include "ConnectRemoteMachineWindow.h"
 #include "thread/threadpool.h"
+#include "thread/threadtask.h"
 #include <sstream>
 
-using namespace KBEngine;
 
 // CguiconsoleDlg dialog
 class CguiconsoleDlg : public CDialog
@@ -82,7 +82,7 @@ public:
 
 	bool startProfile(std::string name, int8 type, uint32 timinglen);
 
-	void addThreadTask(thread::TPTask* tptask);
+	void addThreadTask(KBEngine::thread::TPTask* tptask);
 
 	void autoSelectLogger();
 
@@ -135,7 +135,7 @@ private:
 	CImageList m_ImageList;
 
 	// Ïß³Ì³Ø
-	thread::ThreadPool threadPool_;	
+	KBEngine::thread::ThreadPool threadPool_;
 
 public:
 	afx_msg void OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);

@@ -19,6 +19,15 @@
 #include <syslog.h>
 #endif
 
+#ifndef NO_USE_LOG4CXX
+#include "spdlog/spdlog.h"
+#include "spdlog/async.h"
+#include "spdlog/common.h"
+#include "spdlog/sinks/stdout_sinks.h"
+#include "spdlog/sinks/daily_file_sink.h"
+#include "spdlog/sinks/basic_file_sink.h"
+#endif
+
 #include <sys/timeb.h>
 
 #include "../../server/tools/logger/logger_interface.h"
@@ -152,7 +161,7 @@ bufferedLogPackets_(),
 hasBufferedLogPackets_(0),
 pNetworkInterface_(NULL),
 pDispatcher_(NULL),
-scriptMsgType_(spdlog::level::info),
+scriptMsgType_((int)spdlog::level::info),
 noSyncLog_(false),
 canLogFile_(true),
 loseLoggerTime_(timestamp()),

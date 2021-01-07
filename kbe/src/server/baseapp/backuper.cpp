@@ -3,6 +3,7 @@
 #include "baseapp.h"
 #include "backuper.h"
 #include "server/serverconfig.h"
+#include <random>
 
 namespace KBEngine{	
 float backupPeriod = 0.0;
@@ -89,7 +90,8 @@ void Backuper::createBackupTable()
 	}
 
 	// 随机一下序列
-	std::random_shuffle(backupEntityIDs_.begin(), backupEntityIDs_.end());
+	const unsigned int seed = (int)std::chrono::system_clock::now().time_since_epoch().count();
+	std::shuffle(backupEntityIDs_.begin(), backupEntityIDs_.end(), std::default_random_engine(seed));
 }
 
 }

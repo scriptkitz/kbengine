@@ -123,13 +123,13 @@ public:
 	};
 };
 
-class FindServersTask : public thread::TPTask
+class FindServersTask : public KBEngine::thread::TPTask
 {
 public:
 	std::vector<COMPONENT_TYPE> findComponentTypes;
 
 	FindServersTask():
-	thread::TPTask(),
+	KBEngine::thread::TPTask(),
 	findComponentTypes()
 	{
 		CguiconsoleDlg* dlg = static_cast<CguiconsoleDlg*>(theApp.m_pMainWnd);
@@ -137,7 +137,7 @@ public:
 	}
 
 	FindServersTask(COMPONENT_TYPE findComponentType):
-	thread::TPTask(),
+	KBEngine::thread::TPTask(),
 	findComponentTypes()
 	{
 		CguiconsoleDlg* dlg = static_cast<CguiconsoleDlg*>(theApp.m_pMainWnd);
@@ -272,7 +272,7 @@ RESTART_RECV:
 		return false;
 	}
 
-	virtual thread::TPTask::TPTaskState presentMainThread()
+	virtual KBEngine::thread::TPTask::TPTaskState presentMainThread()
 	{ 
 		if(!g_isDestroyed)
 		{
@@ -280,7 +280,7 @@ RESTART_RECV:
 			dlg->updateTree();
 		}
 
-		return thread::TPTask::TPTASK_STATE_COMPLETED; 
+		return KBEngine::thread::TPTask::TPTASK_STATE_COMPLETED;
 	}
 };
 
@@ -755,7 +755,7 @@ HCURSOR CguiconsoleDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-void CguiconsoleDlg::addThreadTask(thread::TPTask* tptask)
+void CguiconsoleDlg::addThreadTask(KBEngine::thread::TPTask* tptask)
 {
 	threadPool_.addTask(tptask);
 }
