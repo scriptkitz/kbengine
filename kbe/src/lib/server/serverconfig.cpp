@@ -1484,55 +1484,6 @@ bool ServerConfig::loadConfig(std::string fileName)
 		}
 	}
 
-	rootNode = xml->getRootNode("logger");
-	if(rootNode != NULL)
-	{
-		node = xml->enterNode(rootNode, "internalInterface");	
-		if(node != NULL)
-			strncpy((char*)&_loggerInfo.internalInterface, xml->getValStr(node).c_str(), MAX_NAME - 1);
-
-		node = xml->enterNode(rootNode, "entryScriptFile");
-		if (node != NULL)
-			strncpy((char*)&_loggerInfo.entryScriptFile, xml->getValStr(node).c_str(), MAX_NAME - 1);
-
-		node = xml->enterNode(rootNode, "SOMAXCONN");
-		if(node != NULL){
-			_loggerInfo.tcp_SOMAXCONN = xml->getValInt(node);
-		}
-
-		node = xml->enterNode(rootNode, "tick_max_buffered_logs");
-		if(node != NULL){
-			tick_max_buffered_logs_ = (uint32)xml->getValInt(node);
-		}
-
-		node = xml->enterNode(rootNode, "tick_sync_logs");
-		if(node != NULL){
-			tick_max_sync_logs_ = (uint32)xml->getValInt(node);
-		}
-	
-		node = xml->enterNode(rootNode, "telnet_service");
-		if (node != NULL)
-		{
-			TiXmlNode* childnode = xml->enterNode(node, "port");
-			if (childnode)
-			{
-				_loggerInfo.telnet_port = xml->getValInt(childnode);
-			}
-
-			childnode = xml->enterNode(node, "password");
-			if (childnode)
-			{
-				_loggerInfo.telnet_passwd = xml->getValStr(childnode);
-			}
-
-			childnode = xml->enterNode(node, "default_layer");
-			if (childnode)
-			{
-				_loggerInfo.telnet_deflayer = xml->getValStr(childnode);
-			}
-		}
-	}
-
 	if(email_service_config.size() > 0)
 	{
 		SmartPointer<XML> emailxml(new XML(Resmgr::getSingleton().matchRes(email_service_config).c_str()));

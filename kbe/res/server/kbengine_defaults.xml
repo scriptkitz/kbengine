@@ -342,13 +342,13 @@
 					（Database auth)
 				-->
 				<auth>  
-					<username> kbe </username>									<!-- Type: String -->
-					<password> pwd123456 </password>							<!-- Type: String -->
+					<username> kbeuser </username>									<!-- Type: String -->
+					<password> 123456 </password>							<!-- Type: String -->
 					
 					<!-- 为true则表示password是加密(rsa)的, 可防止明文配置 
 						(is true, password is RSA)
 					-->
-					<encrypt> true </encrypt>
+					<encrypt> false </encrypt>
 				</auth>
 
 				<!-- 数据库名称 
@@ -901,42 +901,4 @@
 		</telnet_service>
 	</bots>
 	
-	<logger>
-		<!-- 脚本入口模块， 相当于main函数 
-			(Entry module, like the main-function)
-		-->
-		<entryScriptFile> kbemain </entryScriptFile>
-			
-		<!-- 指定接口地址，可配置网卡名、MAC、IP
-			（Interface address specified, configurable NIC/MAC/IP） 
-		-->
-		<internalInterface>  </internalInterface>
-		
-		<!-- 单个app(baseapp, cellapp, 等等..)进程上, 一个tick最多缓存的log数量
-			（The number of single-process(baseapp, cellapp, etc..), The number of log a tick buffer.） 
-		-->
-		<tick_max_buffered_logs> 131070 </tick_max_buffered_logs>
-
-		<!-- 单个app(baseapp, cellapp, 等等..)进程上, 一个tick同步给logger的log数量
-			（The number of single-process(baseapp, cellapp, etc..), A tick synchronization to the number of logger） 
-		-->
-		<tick_sync_logs> 0 </tick_sync_logs>
-
-		<!-- Telnet服务, 如果端口被占用则向后尝试34001.. 
-			(Telnet service, if the port is occupied backwards to try 34001)
-		-->
-		<telnet_service>
-			<port> 34000 </port>
-			<password> pwd123456 </password>
-			<!-- 命令默认层 
-				(layer of default the command)
-			-->
-			<default_layer> python </default_layer>
-		</telnet_service>
-
-		<!-- listen监听队列最大值
-		    (listen: Maximum listen queue)
-		 -->
-		<SOMAXCONN> 511 </SOMAXCONN>
-	</logger>
 </root>

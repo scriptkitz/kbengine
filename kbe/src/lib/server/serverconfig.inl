@@ -52,12 +52,6 @@ INLINE ENGINE_COMPONENT_INFO& ServerConfig::getBots(void)
 }
 
 //-------------------------------------------------------------------------------------		
-INLINE ENGINE_COMPONENT_INFO& ServerConfig::getLogger(void)
-{
-	return _loggerInfo;
-}
-
-//-------------------------------------------------------------------------------------		
 INLINE ENGINE_COMPONENT_INFO& ServerConfig::getInterfaces(void)
 {
 	return _interfacesInfo;
@@ -88,8 +82,6 @@ INLINE ENGINE_COMPONENT_INFO& ServerConfig::getComponent(COMPONENT_TYPE componen
 		return getBaseApp();
 	case MACHINE_TYPE:
 		return getKBMachine();
-	case LOGGER_TYPE:
-		return getLogger();
 	default:
 		return getCellApp();
 	};

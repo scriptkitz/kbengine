@@ -167,13 +167,11 @@ public:
 	Components::ComponentInfos* getBaseappmgr();
 	Components::ComponentInfos* getCellappmgr();
 	Components::ComponentInfos* getDbmgr();
-	Components::ComponentInfos* getLogger();
 	Components::ComponentInfos* getInterfaceses();
 
 	Network::Channel* getBaseappmgrChannel();
 	Network::Channel* getCellappmgrChannel();
 	Network::Channel* getDbmgrChannel();
-	Network::Channel* getLoggerChannel();
 
 	/**
 		统计某个UID下的所有组件数量
@@ -199,8 +197,6 @@ public:
 	void extraData3(uint64 v){ extraData3_ = v; }
 	void extraData4(uint64 v){ extraData4_ = v; }
 
-	bool findLogger();
-	
 	void broadcastSelf();
 
 private:
@@ -217,7 +213,6 @@ private:
 	COMPONENTS								_cellappmgrs;
 	COMPONENTS								_baseappmgrs;
 	COMPONENTS								_machines;
-	COMPONENTS								_loggers;
 	COMPONENTS								_interfaceses;
 	COMPONENTS								_bots;
 	COMPONENTS								_consoles;

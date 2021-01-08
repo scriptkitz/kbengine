@@ -13,7 +13,6 @@
 #include "../../server/cellapp/cellapp_interface.h"
 #include "../../server/dbmgr/dbmgr_interface.h"
 #include "../../server/loginapp/loginapp_interface.h"
-#include "../../server/tools/logger/logger_interface.h"
 #include "../../server/tools/interfaces/interfaces_interface.h"
 
 namespace KBEngine { 
@@ -54,7 +53,7 @@ void ComponentActiveReportHandler::handleTimeout(TimerHandle handle, void * arg)
 		case TIMEOUT_ACTIVE_TICK:
 		{
 			int8 findComponentTypes[] = {BASEAPPMGR_TYPE, CELLAPPMGR_TYPE, DBMGR_TYPE, CELLAPP_TYPE, 
-								BASEAPP_TYPE, LOGINAPP_TYPE, LOGGER_TYPE, UNKNOWN_COMPONENT_TYPE};
+								BASEAPP_TYPE, LOGINAPP_TYPE, UNKNOWN_COMPONENT_TYPE};
 			
 			int ifind = 0;
 			while(findComponentTypes[ifind] != UNKNOWN_COMPONENT_TYPE)

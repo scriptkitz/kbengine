@@ -21,7 +21,6 @@
 #include "../../server/cellapp/cellapp_interface.h"
 #include "../../server/dbmgr/dbmgr_interface.h"
 #include "../../server/loginapp/loginapp_interface.h"
-#include "../../server/tools/logger/logger_interface.h"
 #include "../../server/tools/interfaces/interfaces_interface.h"
 
 namespace KBEngine{
@@ -297,10 +296,6 @@ void ServerApp::onChannelTimeOut(Network::Channel * pChannel)
 //-------------------------------------------------------------------------------------
 void ServerApp::onAddComponent(const Components::ComponentInfos* pInfos)
 {
-	if(pInfos->componentType == LOGGER_TYPE)
-	{
-		DebugHelper::getSingleton().registerLogger(LoggerInterface::writeLog.msgID, pInfos->pIntAddr.get());
-	}
 }
 
 //-------------------------------------------------------------------------------------
@@ -316,14 +311,9 @@ void ServerApp::onIdentityillegal(COMPONENT_TYPE componentType, COMPONENT_ID com
 //-------------------------------------------------------------------------------------
 void ServerApp::onRemoveComponent(const Components::ComponentInfos* pInfos)
 {
-	if(pInfos->componentType == LOGGER_TYPE)
-	{
-		DebugHelper::getSingleton().unregisterLogger(LoggerInterface::writeLog.msgID, pInfos->pIntAddr.get());
-	}
-	else if(pInfos->componentType == DBMGR_TYPE)
+	if(pInfos->componentType == DBMGR_TYPE)
 	{
 		if(g_componentType != MACHINE_TYPE && 
-			g_componentType != LOGGER_TYPE && 
 			g_componentType != INTERFACES_TYPE &&
 			g_componentType != BOTS_TYPE &&
 			g_componentType != WATCHER_TYPE)

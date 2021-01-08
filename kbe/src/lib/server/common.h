@@ -137,11 +137,6 @@ namespace KBEngine {
 				BUNDLE.newMessage(LoginappInterface::MESSAGENAME);											\
 			}																								\
 			break;																							\
-		case LOGGER_TYPE:																					\
-			{																								\
-				BUNDLE.newMessage(LoggerInterface::MESSAGENAME);											\
-			}																								\
-			break;																							\
 		case INTERFACES_TYPE:																				\
 			{																								\
 				BUNDLE.newMessage(InterfacesInterface::MESSAGENAME);										\

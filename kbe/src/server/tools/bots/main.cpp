@@ -45,11 +45,6 @@
 #include "cellappmgr/cellappmgr_interface.h"
 
 #undef DEFINE_IN_INTERFACE
-#include "tools/logger/logger_interface.h"
-#define DEFINE_IN_INTERFACE
-#include "tools/logger/logger_interface.h"
-
-#undef DEFINE_IN_INTERFACE
 #include "tools/interfaces/interfaces_interface.h"
 #define DEFINE_IN_INTERFACE
 #include "tools/interfaces/interfaces_interface.h"

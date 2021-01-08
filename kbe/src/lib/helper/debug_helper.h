@@ -141,57 +141,21 @@ public:
 
 	void onMessage(uint32 logType, const char * str, uint32 length);
 
-	void registerLogger(Network::MessageID msgID, Network::Address* pAddr);
-	void unregisterLogger(Network::MessageID msgID, Network::Address* pAddr);
-
-	void onNoLogger();
-
 	void changeLogger(const std::string& name);
 	void closeLogger();  // close logger for fork + execv
 
-	void clearBufferedLog(bool destroy = false);
-
-	void set_errorcolor();
-	void set_normalcolor();
-	void set_warningcolor();
-
 	void setScriptMsgType(int msgtype);
 	void resetScriptMsgType();
-
-	/** 
-		同步日志到logger
-	*/
-	void sync();
-
-	void printBufferedLogs();
-
-	size_t hasBufferedLogPackets() const{ return hasBufferedLogPackets_; }
-
-	Network::Channel* pLoggerChannel();
-
-	bool canLog(int level);
 
 private:
 	FILE* _logfile;
 	std::string _currFile, _currFuncName;
 	uint32 _currLine;
 
-	Network::Address loggerAddr_;
 	KBEngine::thread::ThreadMutex logMutex;
-
-	std::queue< Network::Bundle* > bufferedLogPackets_;
-	size_t hasBufferedLogPackets_;
 
 	Network::NetworkInterface* pNetworkInterface_;
 	Network::EventDispatcher* pDispatcher_;
-
-	int scriptMsgType_;
-
-	bool noSyncLog_;
-
-	bool canLogFile_;
-
-	uint64 loseLoggerTime_;
 
 	// 记录下主线程ID，用于判断是否是子线程输出日志
 	// 当子线程输出日志时，对相关日志进行缓存到主线程时再同步给logger
@@ -200,9 +164,6 @@ private:
 #else
 	THREAD_ID mainThreadID_;
 #endif
-
-	ObjectPool<MemoryStream> memoryStreamPool_;
-	std::queue< MemoryStream* > childThreadBufferedLogPackets_;
 };
 
 /*---------------------------------------------------------------------------------

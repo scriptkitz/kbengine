@@ -53,11 +53,6 @@
 #include "cellappmgr/cellappmgr_interface.h"
 
 #undef DEFINE_IN_INTERFACE
-#include "tools/logger/logger_interface.h"
-#define DEFINE_IN_INTERFACE
-#include "tools/logger/logger_interface.h"
-
-#undef DEFINE_IN_INTERFACE
 #include "tools/bots/bots_interface.h"
 #define DEFINE_IN_INTERFACE
 #include "tools/bots/bots_interface.h"
@@ -152,7 +147,6 @@ public:
 
 	virtual bool process()
 	{
-		//COMPONENT_TYPE findComponentTypes[] = {LOGGER_TYPE, BASEAPP_TYPE, CELLAPP_TYPE, BASEAPPMGR_TYPE, CELLAPPMGR_TYPE, LOGINAPP_TYPE, DBMGR_TYPE, BOTS_TYPE, UNKNOWN_COMPONENT_TYPE};
 		int ifind = 0;
 
 		if(g_isDestroyed)
@@ -1813,8 +1807,6 @@ bool CguiconsoleDlg::startProfile(std::string name, int8 type, uint32 timinglen)
 			(*pBundle).newMessage(DbmgrInterface::startProfile);
 		else if(getTreeItemComponent(m_tree.GetSelectedItem()) == LOGINAPP_TYPE)
 			(*pBundle).newMessage(LoginappInterface::startProfile);
-		else if(getTreeItemComponent(m_tree.GetSelectedItem()) == LOGGER_TYPE)
-			(*pBundle).newMessage(LoggerInterface::startProfile);
 		else if(getTreeItemComponent(m_tree.GetSelectedItem()) == BOTS_TYPE)
 			(*pBundle).newMessage(BotsInterface::startProfile);
 		else

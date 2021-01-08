@@ -20,7 +20,6 @@
 #include "../../server/cellapp/cellapp_interface.h"
 #include "../../server/dbmgr/dbmgr_interface.h"
 #include "../../server/loginapp/loginapp_interface.h"
-#include "../../server/tools/logger/logger_interface.h"
 #include "../../server/tools/bots/bots_interface.h"
 #include "../../server/tools/interfaces/interfaces_interface.h"
 
@@ -43,7 +42,6 @@ _loginapps(),
 _cellappmgrs(),
 _baseappmgrs(),
 _machines(),
-_loggers(),
 _interfaceses(),
 _bots(),
 _consoles(),
@@ -84,40 +82,30 @@ void Components::initialize(Network::NetworkInterface * pNetworkInterface, COMPO
 	switch(componentType_)
 	{
 	case CELLAPP_TYPE:
-		findComponentTypes_[0] = LOGGER_TYPE;
-		findComponentTypes_[1] = DBMGR_TYPE;
-		findComponentTypes_[2] = CELLAPPMGR_TYPE;
-		findComponentTypes_[3] = BASEAPPMGR_TYPE;
+		findComponentTypes_[0] = DBMGR_TYPE;
+		findComponentTypes_[1] = CELLAPPMGR_TYPE;
+		findComponentTypes_[2] = BASEAPPMGR_TYPE;
 		break;
 	case BASEAPP_TYPE:
-		findComponentTypes_[0] = LOGGER_TYPE;
-		findComponentTypes_[1] = DBMGR_TYPE;
-		findComponentTypes_[2] = BASEAPPMGR_TYPE;
-		findComponentTypes_[3] = CELLAPPMGR_TYPE;
-		break;
-	case BASEAPPMGR_TYPE:
-		findComponentTypes_[0] = LOGGER_TYPE;
-		findComponentTypes_[1] = DBMGR_TYPE;
+		findComponentTypes_[0] = DBMGR_TYPE;
+		findComponentTypes_[1] = BASEAPPMGR_TYPE;
 		findComponentTypes_[2] = CELLAPPMGR_TYPE;
 		break;
+	case BASEAPPMGR_TYPE:
+		findComponentTypes_[0] = DBMGR_TYPE;
+		findComponentTypes_[1] = CELLAPPMGR_TYPE;
+		break;
 	case CELLAPPMGR_TYPE:
-		findComponentTypes_[0] = LOGGER_TYPE;
-		findComponentTypes_[1] = DBMGR_TYPE;
-		findComponentTypes_[2] = BASEAPPMGR_TYPE;
+		findComponentTypes_[0] = DBMGR_TYPE;
+		findComponentTypes_[1] = BASEAPPMGR_TYPE;
 		break;
 	case LOGINAPP_TYPE:
-		findComponentTypes_[0] = LOGGER_TYPE;
-		findComponentTypes_[1] = DBMGR_TYPE;
-		findComponentTypes_[2] = BASEAPPMGR_TYPE;
+		findComponentTypes_[0] = DBMGR_TYPE;
+		findComponentTypes_[1] = BASEAPPMGR_TYPE;
 		break;
 	case DBMGR_TYPE:
-		findComponentTypes_[0] = LOGGER_TYPE;
 		break;
 	default:
-		if(componentType_ != LOGGER_TYPE && 
-			componentType_ != MACHINE_TYPE && 
-			componentType_ != INTERFACES_TYPE)
-			findComponentTypes_[0] = LOGGER_TYPE;
 		break;
 	};
 }
@@ -324,15 +312,10 @@ void Components::removeComponentByChannel(Network::Channel * pChannel, bool isSh
 				//SAFE_RELEASE((*iter).pExtAddr);
 				// (*iter).pChannel->decRef();
 
-				if (!isShutingdown && g_componentType != LOGGER_TYPE && g_componentType != INTERFACES_TYPE)
+				if (!isShutingdown && g_componentType != INTERFACES_TYPE)
 				{
 					ERROR_MSG(fmt::format("Components::removeComponentByChannel: {} : {}, Abnormal exit(reason={})! Channel(timestamp={}, lastReceivedTime={}, inactivityExceptionPeriod={})\n",
 						COMPONENT_NAME_EX(componentType), (*iter).cid, pChannel->condemnReason(), timestamp(), pChannel->lastReceivedTime(), pChannel->inactivityExceptionPeriod()));
-
-#if KBE_PLATFORM == PLATFORM_WIN32
-					printf("[ERROR]: %s.\n", (fmt::format("Components::removeComponentByChannel: {} : {}, Abnormal exit(reason={})!\n",
-						COMPONENT_NAME_EX(componentType), (*iter).cid, pChannel->condemnReason())).c_str());
-#endif
 				}
 				else
 				{
@@ -518,16 +501,6 @@ int Components::connectComponent(COMPONENT_TYPE componentType, int32 uid, COMPON
 					_pNetworkInterface->intTcpAddr().ip, _pNetworkInterface->intTcpAddr().port,
 					_pNetworkInterface->extTcpAddr().ip, _pNetworkInterface->extTcpAddr().port, g_kbeSrvConfig.getConfig().externalAddress);
 			}
-			else if(componentType == LOGGER_TYPE)
-			{
-				(*pBundle).newMessage(LoggerInterface::onRegisterNewApp);
-				
-				LoggerInterface::onRegisterNewAppArgs11::staticAddToBundle((*pBundle), getUserUID(), getUsername(), 
-					componentType_, componentID_, 
-					g_componentGlobalOrder, g_componentGroupOrder,
-					_pNetworkInterface->intTcpAddr().ip, _pNetworkInterface->intTcpAddr().port,
-					_pNetworkInterface->extTcpAddr().ip, _pNetworkInterface->extTcpAddr().port, g_kbeSrvConfig.getConfig().externalAddress);
-			}
 			else
 			{
 				KBE_ASSERT(false && "invalid componentType.\n");
@@ -560,7 +533,6 @@ void Components::clear(int32 uid, bool shouldShowLog)
 	delComponent(uid, CELLAPP_TYPE, uid, true, shouldShowLog);
 	delComponent(uid, BASEAPP_TYPE, uid, true, shouldShowLog);
 	delComponent(uid, LOGINAPP_TYPE, uid, true, shouldShowLog);
-	//delComponent(uid, LOGGER_TYPE, uid, true, shouldShowLog);
 }
 
 //-------------------------------------------------------------------------------------		
@@ -581,9 +553,7 @@ Components::COMPONENTS& Components::getComponents(COMPONENT_TYPE componentType)
 	case BASEAPP_TYPE:
 		return _baseapps;
 	case MACHINE_TYPE:
-		return _machines;
-	case LOGGER_TYPE:
-		return _loggers;			
+		return _machines;	
 	case INTERFACES_TYPE:
 		return _interfaceses;	
 	case BOTS_TYPE:
@@ -934,12 +904,6 @@ Components::ComponentInfos* Components::getDbmgr()
 }
 
 //-------------------------------------------------------------------------------------		
-Components::ComponentInfos* Components::getLogger()
-{
-	return findComponent(LOGGER_TYPE, getUserUID(), 0);
-}
-
-//-------------------------------------------------------------------------------------		
 Components::ComponentInfos* Components::getInterfaceses()
 {
 	return findComponent(INTERFACES_TYPE, getUserUID(), 0);
@@ -969,16 +933,6 @@ Network::Channel* Components::getCellappmgrChannel()
 Network::Channel* Components::getDbmgrChannel()
 {
 	Components::ComponentInfos* cinfo = getDbmgr();
-	if(cinfo == NULL)
-		 return NULL;
-
-	return cinfo->pChannel;
-}
-
-//-------------------------------------------------------------------------------------		
-Network::Channel* Components::getLoggerChannel()
-{
-	Components::ComponentInfos* cinfo = getLogger();
 	if(cinfo == NULL)
 		 return NULL;
 
@@ -1055,139 +1009,6 @@ void Components::onChannelDeregister(Network::Channel * pChannel, bool isShuting
 }
 
 //-------------------------------------------------------------------------------------
-bool Components::findLogger()
-{
-	if (g_componentType == LOGGER_TYPE || g_componentType == MACHINE_TYPE || g_componentType == TOOL_TYPE ||
-		g_componentType == CONSOLE_TYPE || g_componentType == CLIENT_TYPE || g_componentType == BOTS_TYPE ||
-		g_componentType == WATCHER_TYPE || componentType_ == INTERFACES_TYPE)
-	{
-		DebugHelper::getSingleton().onNoLogger();
-		return true;
-	}
-	
-	int i = 0;
-	
-	while(i++ < 1/*如果Logger与其他游戏进程同时启动，这里设定的查找次数越多，
-		找到Logger的概率越大，当前只设定查找一次，假定用户已经提前好启动Logger服务*/)
-	{
-		srand(KBEngine::getSystemTime());
-		uint16 nport = KBE_PORT_START + (rand() % 1000);
-			
-		Network::BundleBroadcast bhandler(*pNetworkInterface(), nport);
-		if(!bhandler.good())
-		{
-			continue;
-		}
-
-		bhandler.itry(0);
-		if(bhandler.pCurrPacket() != NULL)
-		{
-			bhandler.pCurrPacket()->resetPacket();
-		}
-			
-		COMPONENT_TYPE findComponentType = LOGGER_TYPE;
-		bhandler.newMessage(MachineInterface::onFindInterfaceAddr);
-		MachineInterface::onFindInterfaceAddrArgs7::staticAddToBundle(bhandler, getUserUID(), getUsername(), 
-			g_componentType, g_componentID, findComponentType, pNetworkInterface()->intTcpAddr().ip, bhandler.epListen().addr().port);
-		
-		ENGINE_COMPONENT_INFO cinfos = ServerConfig::getSingleton().getKBMachine();
-		std::vector< std::string >::iterator machine_addresses_iter = cinfos.machine_addresses.begin();
-		for(; machine_addresses_iter != cinfos.machine_addresses.end(); ++machine_addresses_iter)
-			bhandler.addBroadCastAddress((*machine_addresses_iter));
-			
-		if(!bhandler.broadcast())
-		{
-			//ERROR_MSG("Components::findLogger: broadcast error!\n");
-			continue;
-		}
-
-		int32 timeout = 1500000;
-		MachineInterface::onBroadcastInterfaceArgs25 args;
-
-RESTART_RECV:
-
-		if(bhandler.receive(&args, 0, timeout, false))
-		{
-			bool isContinue = false;
-			timeout = 1000000;
-
-			do
-			{
-				if(isContinue)
-				{
-					try
-					{
-						args.createFromStream(*bhandler.pCurrPacket());
-					}catch(MemoryStreamException &)
-					{
-						break;
-					}
-				}
-				
-				if(args.componentIDEx != g_componentID)
-				{
-					//WARNING_MSG(fmt::format("Components::findLogger: msg.componentID {} != {}.\n", 
-					//	args.componentIDEx, g_componentID));
-					
-					args.componentIDEx = 0;
-					goto RESTART_RECV;
-				}
-
-				// 如果找不到
-				if(args.componentType == UNKNOWN_COMPONENT_TYPE)
-				{
-					isContinue = true;
-					continue;
-				}
-
-				INFO_MSG(fmt::format("Components::findLogger: found {}, addr:{}:{}\n",
-					COMPONENT_NAME_EX((COMPONENT_TYPE)args.componentType),
-					inet_ntoa((struct in_addr&)args.intaddr),
-					ntohs(args.intport)));
-
-				Components::getSingleton().addComponent(args.uid, args.username.c_str(), 
-					(KBEngine::COMPONENT_TYPE)args.componentType, args.componentID, args.globalorderid, args.grouporderid, args.gus,
-					args.intaddr, args.intport, args.extaddr, args.extport, args.extaddrEx, args.pid, args.cpu, args.mem, 
-					args.usedmem, args.extradata, args.extradata1, args.extradata2, 123);
-
-				isContinue = true;
-			}while(bhandler.pCurrPacket()->length() > 0);
-
-			// 防止接收到的数据不是想要的数据
-			if(findComponentType == args.componentType)
-			{
-				for(int iconn=0; iconn<5; iconn++)
-				{
-					if(connectComponent(static_cast<COMPONENT_TYPE>(findComponentType), getUserUID(), 0, false) != 0)
-					{
-						//ERROR_MSG(fmt::format("Components::findLogger: register self to {} error!\n",
-						//COMPONENT_NAME_EX((COMPONENT_TYPE)findComponentType)));
-						//dispatcher().breakProcessing();
-						KBEngine::sleep(200);
-					}
-					else
-					{
-						//findComponentTypes_[0] = -1;
-						for(size_t ic=1; ic<sizeof(findComponentTypes_) - 1; ++ic)
-						{
-							findComponentTypes_[ic - 1] = findComponentTypes_[ic];
-						}
-
-						return true;
-					}
-				}
-			}
-		}
-		else
-		{
-			// 接受数据超时了
-		}
-	}
-
-	return false;
-}
-
-//-------------------------------------------------------------------------------------
 bool Components::findComponents()
 {
 	if(state_ == 1)
@@ -1213,17 +1034,10 @@ bool Components::findComponents()
 				std::string s = fmt::format("Components::findComponents: find {}({})...\ndelay time is too long, please check the {} logs!\n",
 					COMPONENT_NAME_EX((COMPONENT_TYPE)findComponentType), ++count, COMPONENT_NAME_EX((COMPONENT_TYPE)findComponentType));
 
-				WARNING_MSG(s);
-
-#if KBE_PLATFORM == PLATFORM_WIN32
-				if(count <= 25)
-					DebugHelper::getSingleton().set_warningcolor();
+				if (count <= 25)
+					WARNING_MSG(s);
 				else
-					DebugHelper::getSingleton().set_errorcolor();
-
-				printf("[WARNING]: %s", s.c_str());
-				DebugHelper::getSingleton().set_normalcolor();
-#endif
+					ERROR_MSG(s);
 			}
 
 			Network::BundleBroadcast bhandler(*pNetworkInterface(), nport);
@@ -1308,29 +1122,6 @@ RESTART_RECV:
 					isContinue = true;
 				}while(bhandler.pCurrPacket()->length() > 0);
 
-				// 防止接收到的数据不是想要的数据
-				if(findComponentType == args.componentType)
-				{
-					// 这里做个特例， 是logger则优先连接上去， 这样可以尽早同步日志
-					if(findComponentType == (int8)LOGGER_TYPE)
-					{
-						findComponentTypes_[findIdx_] = -1;
-						if(connectComponent(static_cast<COMPONENT_TYPE>(findComponentType), getUserUID(), 0) != 0)
-						{
-							ERROR_MSG(fmt::format("Components::findComponents: register self to {} error!\n",
-							COMPONENT_NAME_EX((COMPONENT_TYPE)findComponentType)));
-							findIdx_++;
-							//dispatcher().breakProcessing();
-							return false;
-						}
-						else
-						{
-							findIdx_++;
-							continue;
-						}
-					}
-				}
-				
 				goto RESTART_RECV;
 			}
 			else
@@ -1418,12 +1209,6 @@ RESTART_RECV:
 void Components::onFoundAllComponents()
 {
 	INFO_MSG("Components::process(): Found all the components!\n");
-
-#if KBE_PLATFORM == PLATFORM_WIN32
-		DebugHelper::getSingleton().set_normalcolor();
-		printf("[INFO]: Found all the components!\n");
-		DebugHelper::getSingleton().set_normalcolor();
-#endif
 }
 
 //-------------------------------------------------------------------------------------

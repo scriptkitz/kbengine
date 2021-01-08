@@ -16,7 +16,6 @@
 #include "../../../server/cellapp/cellapp_interface.h"
 #include "../../../server/dbmgr/dbmgr_interface.h"
 #include "../../../server/loginapp/loginapp_interface.h"
-#include "../../../server/tools/logger/logger_interface.h"
 #include "../../../server/tools/bots/bots_interface.h"
 #include "../../../server/tools/interfaces/interfaces_interface.h"
 

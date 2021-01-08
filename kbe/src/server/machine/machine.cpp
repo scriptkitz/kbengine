@@ -18,7 +18,6 @@
 #include "../cellapp/cellapp_interface.h"
 #include "../dbmgr/dbmgr_interface.h"
 #include "../loginapp/loginapp_interface.h"
-#include "../tools/logger/logger_interface.h"
 #include "../../server/tools/interfaces/interfaces_interface.h"
 #include "../../server/tools/bots/bots_interface.h"
 #include "common/md5.h"

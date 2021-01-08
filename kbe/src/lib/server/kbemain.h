@@ -109,7 +109,7 @@ inline bool checkComponentID(COMPONENT_TYPE componentType)
 		autoFixUserDigestUID();
 
 	int32 uid = getUserUID();
-	if ((componentType == MACHINE_TYPE || componentType == LOGGER_TYPE) && g_componentID == (COMPONENT_ID)-1)
+	if (componentType == MACHINE_TYPE  && g_componentID == (COMPONENT_ID)-1)
 	{
 		int macMD5 = getMacMD5();
 		
@@ -199,7 +199,7 @@ int kbeMainT(int argc, char * argv[], COMPONENT_TYPE componentType,
 	Components::getSingleton().initialize(&networkInterface, componentType, g_componentID);
 	
 	SERVER_APP app(dispatcher, networkInterface, componentType, g_componentID);
-	Components::getSingleton().findLogger();
+
 	START_MSG(COMPONENT_NAME_EX(componentType), g_componentID);
 
 	if(!app.initialize())

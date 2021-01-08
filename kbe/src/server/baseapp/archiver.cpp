@@ -81,8 +81,8 @@ void Archiver::createArchiveTable()
 	}
 
 	// 随机一下序列
-	const unsigned int seed = (int)std::chrono::system_clock::now().time_since_epoch().count();
-	std::shuffle(arEntityIDs_.begin(), arEntityIDs_.end(), std::default_random_engine(seed));
+	const long long seed = std::chrono::system_clock::now().time_since_epoch().count();
+	std::shuffle(arEntityIDs_.begin(), arEntityIDs_.end(), std::default_random_engine((int)seed));
 }
 
 }

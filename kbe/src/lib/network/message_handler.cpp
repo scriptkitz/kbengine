@@ -193,13 +193,9 @@ MessageHandler* MessageHandlers::add(std::string ihName, MessageArgs* args,
 				{
 					if ((*args_iter) == "std::string")
 					{
-						DebugHelper::getSingleton().set_warningcolor();
-
-						printf("%s::%s::dataSize: "	
+						WARNING_MSG(fmt::format("{}::{}::dataSize: "	
 							"Not NETWORK_FIXED_MESSAGE, "	
-							"has changed to NETWORK_VARIABLE_MESSAGE!\n", COMPONENT_NAME_EX(g_componentType), ihName.c_str());
-
-						DebugHelper::getSingleton().set_normalcolor();
+							"has changed to NETWORK_VARIABLE_MESSAGE!\n", COMPONENT_NAME_EX(g_componentType), ihName));
 						msgHandler->msgLen = NETWORK_VARIABLE_MESSAGE;
 						break;
 					}
