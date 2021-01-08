@@ -151,14 +151,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>../../../../../../libs/</OutDir>
-    <IntDir>..\..\..\..\..\..\_objs\$(ProjectName)_d\$(Configuration)\</IntDir>
+    <OutDir>../../../../libs/</OutDir>
+    <IntDir>..\..\..\..\_objs\$(ProjectName)_d\$(Configuration)\</IntDir>
     <TargetName>lua_d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>../../../../../../libs/</OutDir>
-    <IntDir>..\..\..\..\..\..\_objs\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>../../../../libs/</OutDir>
+    <IntDir>..\..\..\..\_objs\$(ProjectName)\$(Configuration)\</IntDir>
     <TargetName>lua</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
