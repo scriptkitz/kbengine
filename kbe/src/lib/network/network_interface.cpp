@@ -416,6 +416,8 @@ bool NetworkInterface::deregisterChannel(Channel* pChannel)
 //-------------------------------------------------------------------------------------
 void NetworkInterface::onChannelTimeOut(Channel * pChannel)
 {
+	if (!pChannel) return;
+
 	if (pChannelTimeOutHandler_)
 	{
 		pChannelTimeOutHandler_->onChannelTimeOut(pChannel);

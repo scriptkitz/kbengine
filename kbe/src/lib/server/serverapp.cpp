@@ -284,6 +284,7 @@ void ServerApp::onChannelDeregister(Network::Channel * pChannel)
 //-------------------------------------------------------------------------------------	
 void ServerApp::onChannelTimeOut(Network::Channel * pChannel)
 {
+	if (!pChannel) return;
 	INFO_MSG(fmt::format("ServerApp::onChannelTimeOut: "
 		"Channel {0} timeout!\n", pChannel->c_str()));
 

@@ -91,11 +91,11 @@ public:
 	Network::EventDispatcher & dispatcher()				{ return dispatcher_; }
 	Network::NetworkInterface & networkInterface()			{ return networkInterface_; }
 
-	COMPONENT_ID componentID() const	{ return componentID_; }
-	COMPONENT_TYPE componentType() const	{ return componentType_; }
+	COMPONENT_ID componentID() const noexcept	{ return componentID_; }
+	COMPONENT_TYPE componentType() const noexcept { return componentType_; }
 		
 	virtual void onSignalled(int sigNum);
-	virtual void onChannelTimeOut(Network::Channel * pChannel);
+	virtual void onChannelTimeOut(Network::Channel * pChannel) override;
 	virtual void onChannelDeregister(Network::Channel * pChannel);
 	virtual void onAddComponent(const Components::ComponentInfos* pInfos);
 	virtual void onRemoveComponent(const Components::ComponentInfos* pInfos);

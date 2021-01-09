@@ -41,7 +41,7 @@ inline bool operator==( TimerHandle h1, TimerHandle h2 )
 class TimerHandler
 {
 public:
-	TimerHandler() : numTimesRegistered_( 0 ) {}
+	TimerHandler() noexcept : numTimesRegistered_( 0 ) {}
 	virtual ~TimerHandler()
 	{
 		KBE_ASSERT( numTimesRegistered_ == 0 );
@@ -50,16 +50,15 @@ public:
 	virtual void handleTimeout(TimerHandle handle, void * pUser) = 0;
 
 protected:
-	virtual void onRelease( TimerHandle handle, void * pUser ) {
-	}
+	virtual void onRelease( TimerHandle handle, void * pUser ) {}
 
 private:
 	friend class TimeBase;
 
-	void incTimerRegisterCount() { ++numTimesRegistered_; }
-	void decTimerRegisterCount() { --numTimesRegistered_; }
+	void incTimerRegisterCount() noexcept { ++numTimesRegistered_; }
+	void decTimerRegisterCount() noexcept { --numTimesRegistered_; }
 
-	void release( TimerHandle handle, void * pUser )
+	void release( TimerHandle handle, void * pUser ) noexcept
 	{
 		this->decTimerRegisterCount();
 		this->onRelease( handle, pUser );

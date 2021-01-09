@@ -328,7 +328,7 @@ typedef KBEUnordered_map< std::string, std::string >			SPACE_DATA;												//
 
 #if KBE_PLATFORM == PLATFORM_WIN32
 	#define IFNAMSIZ											16
-	typedef UINT_PTR											KBESOCKET;
+	typedef SOCKET												KBESOCKET;
 #ifndef socklen_t
 	typedef	int													socklen_t;
 #endif
