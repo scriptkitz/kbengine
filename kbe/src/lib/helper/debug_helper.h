@@ -117,17 +117,12 @@ public:
 		_currLine = line;
 		_currFuncName = funcname;
 	}
-	
-	std::string getLogName();
-
-	void lockthread();
-	void unlockthread();
     
 	void pNetworkInterface(Network::NetworkInterface* networkInterface);
 	void pDispatcher(Network::EventDispatcher* dispatcher);
 	
-	Network::EventDispatcher* pDispatcher() const{ return pDispatcher_; }
-	Network::NetworkInterface* pNetworkInterface() const{ return pNetworkInterface_; }
+	Network::EventDispatcher* pDispatcher() const noexcept { return pDispatcher_; }
+	Network::NetworkInterface* pNetworkInterface() const noexcept { return pNetworkInterface_; }
 
 	void print_msg(const std::string& s);
 	void debug_msg(const std::string& s);
@@ -151,8 +146,6 @@ private:
 	FILE* _logfile;
 	std::string _currFile, _currFuncName;
 	uint32 _currLine;
-
-	KBEngine::thread::ThreadMutex logMutex;
 
 	Network::NetworkInterface* pNetworkInterface_;
 	Network::EventDispatcher* pDispatcher_;

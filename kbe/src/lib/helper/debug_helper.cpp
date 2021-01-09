@@ -38,7 +38,6 @@ namespace KBEngine{
 KBE_SINGLETON_INIT(DebugHelper);
 
 DebugHelper dbghelper;
-ProfileVal g_syncLogProfile("syncLog");
 
 #ifndef NO_USE_LOG4CXX
 static std::shared_ptr<spdlog::logger> s_cpp_logger;
@@ -98,7 +97,6 @@ _logfile(NULL),
 _currFile(),
 _currFuncName(),
 _currLine(0),
-logMutex(),
 pNetworkInterface_(NULL),
 pDispatcher_(NULL),
 #if KBE_PLATFORM == PLATFORM_WIN32
@@ -116,43 +114,11 @@ DebugHelper::~DebugHelper()
 }	
 
 //-------------------------------------------------------------------------------------
-std::string DebugHelper::getLogName()
-{
-#ifndef NO_USE_LOG4CXX
-	/*
-	log4cxx::FileAppenderPtr appender = (log4cxx::FileAppenderPtr)g_logger->getAppender(log4cxx::LogString(L"R"));
-	if(appender == NULL || appender->getFile().size() == 0)
-		return "";
-
-	char* ccattr = strutil::wchar2char(appender->getFile().c_str());
-	std::string path = ccattr;
-	free(ccattr);
-
-	return path;
-	*/
-#endif
-
-	return "";
-}
-
-//-------------------------------------------------------------------------------------
 void DebugHelper::changeLogger(const std::string& name)
 {
 #ifndef NO_USE_LOG4CXX
 	s_cpp_logger = name=="default" ? spdlog::default_logger() : spdlog::get(name);
 #endif
-}
-
-//-------------------------------------------------------------------------------------
-void DebugHelper::lockthread()
-{
-	logMutex.lockMutex();
-}
-
-//-------------------------------------------------------------------------------------
-void DebugHelper::unlockthread()
-{
-	logMutex.unlockMutex();
 }
 
 //-------------------------------------------------------------------------------------
@@ -177,7 +143,7 @@ void DebugHelper::initialize(COMPONENT_TYPE componentType)
 		fmt::format("logs/{}.log", COMPONENT_NAME_EX(componentType)), 0, 0);
 	const spdlog::sinks_init_list slist = { out_sink, file_sink };
 
-	s_cpp_logger = std::make_shared<spdlog::logger>(COMPONENT_NAME_EX(componentType), slist.begin(), slist.end());
+	s_cpp_logger = std::make_shared<spdlog::async_logger>(COMPONENT_NAME_EX(componentType), slist.begin(), slist.end(), spdlog::thread_pool());
 	formatter = spdlog::details::make_unique<spdlog::pattern_formatter>("[%T.%e] %L: %^%v%$", spdlog::pattern_time_type::local, "");
 	s_cpp_logger->set_formatter(std::move(formatter));
 	s_cpp_logger->set_level(spdlog::level::trace);
@@ -219,8 +185,6 @@ void DebugHelper::onMessage(uint32 logType, const char * str, uint32 length)
 //-------------------------------------------------------------------------------------
 void DebugHelper::print_msg(const std::string& s)
 {
-	KBEngine::thread::ThreadGuard tg(&this->logMutex); 
-
 #ifdef NO_USE_LOG4CXX
 #else
 	s_cpp_logger->info(s);
@@ -232,8 +196,6 @@ void DebugHelper::print_msg(const std::string& s)
 //-------------------------------------------------------------------------------------
 void DebugHelper::error_msg(const std::string& s)
 {
-	KBEngine::thread::ThreadGuard tg(&this->logMutex); 
-
 #ifdef NO_USE_LOG4CXX
 #else
 	s_cpp_logger->error(s);
@@ -245,8 +207,6 @@ void DebugHelper::error_msg(const std::string& s)
 //-------------------------------------------------------------------------------------
 void DebugHelper::info_msg(const std::string& s)
 {
-	KBEngine::thread::ThreadGuard tg(&this->logMutex); 
-
 #ifdef NO_USE_LOG4CXX
 #else
 	s_cpp_logger->info(s);
@@ -282,8 +242,6 @@ int KBELOG_TYPE_MAPPING(int type)
 //-------------------------------------------------------------------------------------
 void DebugHelper::script_info_msg(const std::string& s)
 {
-	KBEngine::thread::ThreadGuard tg(&this->logMutex); 
-
 #ifdef NO_USE_LOG4CXX
 #else
 	s_cpp_logger->info(s);
@@ -295,8 +253,6 @@ void DebugHelper::script_info_msg(const std::string& s)
 //-------------------------------------------------------------------------------------
 void DebugHelper::script_error_msg(const std::string& s)
 {
-	KBEngine::thread::ThreadGuard tg(&this->logMutex); 
-
 #ifdef NO_USE_LOG4CXX
 #else
 	s_cpp_logger->error(s);
@@ -320,8 +276,6 @@ void DebugHelper::resetScriptMsgType()
 //-------------------------------------------------------------------------------------
 void DebugHelper::debug_msg(const std::string& s)
 {
-	KBEngine::thread::ThreadGuard tg(&this->logMutex); 
-
 #ifdef NO_USE_LOG4CXX
 #else
 	s_cpp_logger->debug(s);
@@ -333,8 +287,6 @@ void DebugHelper::debug_msg(const std::string& s)
 //-------------------------------------------------------------------------------------
 void DebugHelper::warning_msg(const std::string& s)
 {
-	KBEngine::thread::ThreadGuard tg(&this->logMutex); 
-
 #ifdef NO_USE_LOG4CXX
 #else
 	s_cpp_logger->warn(s);
@@ -346,8 +298,6 @@ void DebugHelper::warning_msg(const std::string& s)
 //-------------------------------------------------------------------------------------
 void DebugHelper::critical_msg(const std::string& s)
 {
-	KBEngine::thread::ThreadGuard tg(&this->logMutex); 
-
 	char buf[DBG_PT_SIZE];
 	kbe_snprintf(buf, DBG_PT_SIZE, "%s(%d) -> %s\n\t%s\n", _currFile.c_str(), _currLine, _currFuncName.c_str(), s.c_str());
 
