@@ -16,7 +16,7 @@ class ScriptTimerHandler : public TimerHandler
 {
 public:
 	ScriptTimerHandler(ScriptTimers* scriptTimers, sol::function callback) :
-		Callback_(callback),
+		cb_(callback),
 		scriptTimers_(scriptTimers)
 	{
 	}
@@ -29,7 +29,7 @@ private:
 	virtual void handleTimeout(TimerHandle handle, void * pUser)
 	{
 		int id = ScriptTimersUtil::getIDForHandle(scriptTimers_, handle);
-		Callback_(id);
+		cb_(id);
 		return;
 	}
 
@@ -39,7 +39,7 @@ private:
 		delete this;
 	}
 
-	sol::function Callback_;
+	sol::function cb_;
 	ScriptTimers* scriptTimers_;
 };
 
@@ -351,10 +351,11 @@ bool PythonApp::installLuaModules()
 	extfilter: "lua" / "lua|txt|exe"
 	*/
 
-	std::function _listPathResFunc = [](sol::this_state L, const char* respath, const char* extfilter) {
+	std::function _listPathResFunc = [](sol::this_state s, const char* respath, const char* extfilter) {
+		lua_State* L = s;
 		std::wstring wextfilter;
 		std::vector<std::wstring> results;
-		sol::table tb(L, sol::create);
+		sol::table tb = sol::table::create(L);
 
 		if (!respath) return tb;
 
