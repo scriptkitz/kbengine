@@ -45,8 +45,14 @@ public:
 		
 	void socket(int type);
 	INLINE KBESOCKET socket() const;
-	
-	INLINE void setFileDescriptor(int fd);
+
+	INLINE void setFileDescriptor(
+#if KBE_PLATFORM == PLATFORM_WIN32
+		KBESOCKET fd
+#else
+		int fd
+#endif
+	);
 
 	INLINE int joinMulticastGroup(u_int32_t networkAddr);
 	INLINE int quitMulticastGroup(u_int32_t networkAddr);

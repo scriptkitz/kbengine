@@ -42,48 +42,6 @@ namespace KBEngine{ namespace script{
 	PY_PATHS += pySysPaths;											\
 	free(pwpySysResPath);
 
-
-PyObject * PyTuple_FromStringVector(const std::vector< std::string > & v);
-
-template<class T>
-PyObject * PyTuple_FromIntVector(const std::vector< T > & v)
-{
-	int sz = v.size();
-	PyObject * t = PyTuple_New( sz );
-	for (int i = 0; i < sz; ++i)
-	{
-		PyTuple_SetItem( t, i, PyLong_FromLong( v[i] ) );
-	}
-
-	return t;
-}
-
-template<>
-inline PyObject * PyTuple_FromIntVector<int64>(const std::vector< int64 > & v)
-{
-	int sz = (int)v.size();
-	PyObject * t = PyTuple_New( sz );
-	for (int i = 0; i < sz; ++i)
-	{
-		PyTuple_SetItem( t, i, PyLong_FromLongLong( v[i] ) );
-	}
-
-	return t;
-}
-
-template<>
-inline PyObject * PyTuple_FromIntVector<uint64>(const std::vector< uint64 > & v)
-{
-	int sz = (int)v.size();
-	PyObject * t = PyTuple_New( sz );
-	for (int i = 0; i < sz; ++i)
-	{
-		PyTuple_SetItem( t, i, PyLong_FromUnsignedLongLong( v[i] ) );
-	}
-
-	return t;
-}
-
 class Script: public Singleton<Script>
 {						
 public:	
@@ -95,9 +53,13 @@ public:
 	*/
 	virtual bool install(const wchar_t* pythonHomeDir, std::wstring pyPaths, 
 		const char* moduleName, COMPONENT_TYPE componentType);
-
 	virtual bool uninstall(void);
-	
+
+	bool InitLua(const char* home, const char* moduleName, COMPONENT_TYPE componentType, const char* paths, const char* cpaths);
+	bool UnintiLua();
+
+	bool DoFile(const char* filename);
+
 	bool installExtraModule(const char* moduleName);
 
 	/** 
@@ -114,6 +76,7 @@ public:
 		获取脚本基础模块 
 	*/
 	INLINE PyObject* getModule(void) const;
+	INLINE sol::main_table getLuaModule(void) const;
 
 	/** 
 		获取脚本扩展模块 
@@ -137,12 +100,19 @@ public:
 
 	void setenv(const std::string& name, const std::string& value);
 
+private:
+	void _addLuaPaths(const char* path, const char* cpath);
+
 protected:
 	PyObject* 					module_;
 	PyObject*					extraModule_;		// 扩展脚本模块
 	PyObject*					sysInitModules_;	// 初始时sys加载的模块
 
 	ScriptStdOutErr*			pyStdouterr_;
+
+	std::string					script_home_;
+	sol::main_table				lua_module_;
+	sol::state					lua_;
 } ;
 
 }

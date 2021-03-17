@@ -70,6 +70,7 @@ public:
 
 	virtual int processOnce(bool shouldIdle = false);
 
+	virtual bool installLuaModules();
 	virtual bool installPyModules();
 	virtual void onInstallPyModules(){};
 	virtual bool uninstallPyModules();

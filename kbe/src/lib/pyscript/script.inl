@@ -9,9 +9,14 @@ INLINE int Script::run_simpleString(std::string command, std::string* retBufferP
 	return run_simpleString(command.c_str(), retBufferPtr);
 }
 
-INLINE PyObject* Script::getModule(void) const 
+INLINE sol::main_table Script::getLuaModule(void) const
 { 
-	return module_; 
+	return lua_module_;
+}
+
+INLINE PyObject* Script::getModule(void) const
+{
+	return module_;
 }
 
 INLINE PyObject* Script::getExtraModule(void) const 

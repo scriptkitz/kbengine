@@ -161,7 +161,7 @@ int KBCMD::creatDir(const char *pDir)
 {
 	int i = 0;
 	int iRet = -1;
-	int iLen = 0;
+	size_t iLen = 0;
 	char* pszDir = NULL;
 
 	if (NULL == pDir)

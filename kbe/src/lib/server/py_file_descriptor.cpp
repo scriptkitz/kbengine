@@ -13,7 +13,7 @@ namespace KBEngine{
 //-------------------------------------------------------------------------------------
 PyFileDescriptor::PyFileDescriptor(int fd, PyObject* pyCallback, bool write) : 
 	fd_(fd),
-	pyCallback_(pyCallback),
+	Callback_(pyCallback),
 	write_(write)
 {
 	if(write)
@@ -200,9 +200,9 @@ int PyFileDescriptor::handleOutputNotification( int fd )
 //-------------------------------------------------------------------------------------
 void PyFileDescriptor::callback()
 {
-	if(pyCallback_ != NULL)
+	if(Callback_ != NULL)
 	{
-		PyObject* pyResult = PyObject_CallFunction(pyCallback_.get(), 
+		PyObject* pyResult = PyObject_CallFunction(Callback_.get(), 
 											const_cast<char*>("i"), 
 											fd_);
 

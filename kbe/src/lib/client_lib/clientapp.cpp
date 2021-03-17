@@ -162,6 +162,9 @@ bool ClientApp::initialize()
 	if(!initializeBegin())
 		return false;
 
+	if (!installLuaModules())
+		return false;
+
 	if(!installPyModules())
 		return false;
 	
@@ -288,6 +291,13 @@ bool ClientApp::installPyModules()
 	}
 
 	return true;
+}
+//-------------------------------------------------------------------------------------
+bool ClientApp::installLuaModules()
+{
+	std::string file = g_kbeSrvConfig.getBots().entryScriptFile;
+	file += ".lua";
+	return getScript().DoFile(file.c_str());
 }
 
 //-------------------------------------------------------------------------------------

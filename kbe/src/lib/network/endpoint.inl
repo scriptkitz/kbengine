@@ -79,14 +79,20 @@ INLINE KBESOCKET EndPoint::socket() const
 	return socket_;
 }
 
-INLINE void EndPoint::setFileDescriptor(int fd)
+INLINE void EndPoint::setFileDescriptor(
+#if KBE_PLATFORM == PLATFORM_WIN32
+	KBESOCKET fd
+#else
+	int fd
+#endif
+)
 {
 	socket_ = fd;
 }
 
 INLINE void EndPoint::socket(int type)
 {
-	this->setFileDescriptor((int)::socket(AF_INET, type, 0));
+	this->setFileDescriptor(::socket(AF_INET, type, 0));
 
 #if KBE_PLATFORM == PLATFORM_WIN32
 	if ((socket_ == INVALID_SOCKET) && (WSAGetLastError() == WSANOTINITIALISED))

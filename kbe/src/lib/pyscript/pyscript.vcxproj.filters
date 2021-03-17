@@ -18,9 +18,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="copy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -37,9 +34,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pyprofile_handler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pystruct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pywatcher.cpp">
@@ -87,11 +81,11 @@
     <ClCompile Include="py_compression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="copy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="copy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -111,9 +105,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pyprofile_handler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pystruct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pythread_lock.h">
@@ -165,6 +156,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="py_compression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="copy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -5,8 +5,6 @@
 #include "math.h"
 #include "pickler.h"
 #include "pyprofile.h"
-#include "copy.h"
-#include "pystruct.h"
 #include "py_gc.h"
 #include "pyurl.h"
 #include "py_compression.h"
@@ -22,38 +20,6 @@ namespace KBEngine{
 
 KBE_SINGLETON_INIT(script::Script);
 namespace script{
-
-//-------------------------------------------------------------------------------------
-static PyObject* __py_genUUID64(PyObject *self, void *closure)	
-{
-	static int8 check = -1;
-
-	if(check < 0)
-	{
-		if(g_componentGlobalOrder <= 0 || g_componentGlobalOrder > 65535)
-		{
-			WARNING_MSG(fmt::format("globalOrder({}) is not in the range of 0~65535, genUUID64 is not safe, "
-				"in the multi process may be repeated.\n", g_componentGlobalOrder));
-		}
-
-		check = 1;
-	}
-
-	return PyLong_FromUnsignedLongLong(genUUID64());
-}
-
-//-------------------------------------------------------------------------------------
-PyObject * PyTuple_FromStringVector(const std::vector< std::string > & v)
-{
-	int sz = v.size();
-	PyObject * t = PyTuple_New( sz );
-	for (int i = 0; i < sz; ++i)
-	{
-		PyTuple_SetItem( t, i, PyUnicode_FromString( v[i].c_str() ) );
-	}
-
-	return t;
-}
 
 //-------------------------------------------------------------------------------------
 Script::Script():
@@ -129,6 +95,37 @@ int Script::run_simpleString(const char* command, std::string* retBufferPtr)
 	return 0;
 }
 
+bool Script::InitLua(const char* home, const char* moduleName, COMPONENT_TYPE componentType,
+					const char* paths, const char* cpaths)
+{
+	script_home_ = home;
+	// Lua初始化
+	lua_.open_libraries(
+		sol::lib::base,
+		sol::lib::package,
+		sol::lib::coroutine,
+		sol::lib::string,
+		sol::lib::table,
+		sol::lib::math,
+		sol::lib::io,
+		sol::lib::os,
+		sol::lib::debug,
+		sol::lib::utf8);
+
+	_addLuaPaths(paths, cpaths);
+
+	const char* componentName = COMPONENT_NAME_EX(componentType);
+
+	lua_module_ = lua_.create_named_table(moduleName);
+	lua_module_.set_function("genUUID64", genUUID64);
+	lua_module_.set("component", componentName);
+
+	return true;
+}
+bool Script::UnintiLua()
+{
+	return true;
+}
 //-------------------------------------------------------------------------------------
 bool Script::install(const wchar_t* pythonHomeDir, std::wstring pyPaths, 
 	const char* moduleName, COMPONENT_TYPE componentType)
@@ -186,7 +183,6 @@ bool Script::install(const wchar_t* pythonHomeDir, std::wstring pyPaths,
 	PyEval_InitThreads();
 
 	// 注册产生uuid方法到py
-	APPEND_SCRIPT_MODULE_METHOD(module_,		genUUID64,			__py_genUUID64,					METH_VARARGS,			0);
 
 	// 安装py重定向模块
 	ScriptStdOut::installScript(NULL);
@@ -212,8 +208,6 @@ bool Script::install(const wchar_t* pythonHomeDir, std::wstring pyPaths,
 	PyGC::initialize();
 	Pickler::initialize();
 	PyProfile::initialize(this);
-	PyStruct::initialize();
-	Copy::initialize();
 	PyUrl::initialize(this);
 	PyCompression::initialize();
 	PyPlatform::initialize();
@@ -230,8 +224,6 @@ bool Script::uninstall()
 	math::uninstallModule();
 	Pickler::finalise();
 	PyProfile::finalise();
-	PyStruct::finalise();
-	Copy::finalise();
 	PyUrl::finalise();
 	PyCompression::finalise();
 	PyPlatform::finalise();
@@ -262,6 +254,28 @@ bool Script::uninstall()
 
 	INFO_MSG("Script::uninstall(): is successfully!\n");
 	return true;	
+}
+
+bool Script::DoFile(const char* filename)
+{
+	auto result = lua_.safe_script_file(script_home_+filename);
+	if (!result.valid())
+	{
+		sol::error err = result;
+		ERROR_MSG(err.what());
+		return false;
+	}
+
+	return true;
+}
+
+void Script::_addLuaPaths(const char* paths, const char* cpaths)
+{
+	auto package = lua_.get <sol::table>("package");
+	std::string old_paths = package.get<const char*>("path");
+	old_paths += ";";
+	old_paths += paths;
+	package.set("path", old_paths);
 }
 
 //-------------------------------------------------------------------------------------

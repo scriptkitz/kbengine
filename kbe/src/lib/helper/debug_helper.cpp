@@ -143,7 +143,8 @@ void DebugHelper::initialize(COMPONENT_TYPE componentType)
 		fmt::format("logs/{}.log", COMPONENT_NAME_EX(componentType)), 0, 0);
 	const spdlog::sinks_init_list slist = { out_sink, file_sink };
 
-	s_cpp_logger = std::make_shared<spdlog::async_logger>(COMPONENT_NAME_EX(componentType), slist.begin(), slist.end(), spdlog::thread_pool());
+	//s_cpp_logger = std::make_shared<spdlog::async_logger>(COMPONENT_NAME_EX(componentType), slist.begin(), slist.end(), spdlog::thread_pool());
+	s_cpp_logger = std::make_shared<spdlog::logger>(COMPONENT_NAME_EX(componentType), slist.begin(), slist.end());
 	formatter = spdlog::details::make_unique<spdlog::pattern_formatter>("[%T.%e] %L: %^%v%$", spdlog::pattern_time_type::local, "");
 	s_cpp_logger->set_formatter(std::move(formatter));
 	s_cpp_logger->set_level(spdlog::level::trace);

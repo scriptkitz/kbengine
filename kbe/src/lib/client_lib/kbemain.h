@@ -109,6 +109,42 @@ inline bool installPyScript(KBEngine::script::Script& script, COMPONENT_TYPE com
 	EntityGarbages<client::Entity>::installScript(NULL);
 	return ret;
 }
+inline bool installLuaScript(KBEngine::script::Script& script, COMPONENT_TYPE componentType)
+{
+	if (Resmgr::getSingleton().respaths().size() <= 0 ||
+		Resmgr::getSingleton().getPyUserResPath().size() == 0 ||
+		Resmgr::getSingleton().getPySysResPath().size() == 0 ||
+		Resmgr::getSingleton().getPyUserScriptsPath().size() == 0)
+	{
+		ERROR_MSG("EntityApp::installPyScript: KBE_RES_PATH error!\n");
+		return false;
+	}
+
+	std::string user_scripts_path = Resmgr::getSingleton().getPyUserScriptsPath().c_str();
+
+	std::string paths = user_scripts_path + "common/?.lua;";
+	std::string homedir;
+
+	if (componentType == CLIENT_TYPE)
+	{
+		homedir = user_scripts_path + "client/";
+	}
+	else
+	{
+		homedir = user_scripts_path + "bots/";
+	}
+	paths += homedir + "?.lua;";
+
+	script.InitLua(homedir.c_str(), "KBEngine", componentType, paths.c_str(), nullptr);
+
+	//EntityDef::installScript(script.getModule());
+	//client::Entity::installScript(script.getModule());
+	//EntityComponent::installScript(script.getModule());
+	//Entities<client::Entity>::installScript(NULL);
+	//EntityGarbages<client::Entity>::installScript(NULL);
+
+	return true;
+}
 
 inline bool uninstallPyScript(KBEngine::script::Script& script)
 {
@@ -259,9 +295,14 @@ int kbeMainT(int argc, char * argv[], COMPONENT_TYPE componentType,
 		intlisteningPort_min, intlisteningPort_max, intlisteningInterface, 0, 0);
 	
 	KBEngine::script::Script script;
+	if (!installLuaScript(script, componentType))
+	{
+		ERROR_MSG("app::initialize installLuaScript error!\n");
+		return -1;
+	}
 	if(!installPyScript(script, componentType))
 	{
-		ERROR_MSG("app::initialize error!\n");
+		ERROR_MSG("app::initialize installPyScript error!\n");
 		return -1;
 	}
 

@@ -422,7 +422,7 @@ bool Baseapp::installPyModules()
 	{
 		if (PyModule_AddIntConstant(getScript().getModule(), fiter->second.c_str(), fiter->first))
 		{
-			ERROR_MSG(fmt::format("Baseapp::onInstallPyModules: Unable to set KBEngine.{}.\n", fiter->second));
+			ERROR_MSG(fmt::format("Baseapp::installPyModules: Unable to set KBEngine.{}.\n", fiter->second));
 		}
 	}
 

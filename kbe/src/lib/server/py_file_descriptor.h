@@ -31,7 +31,7 @@ protected:
 	void callback();
 
 	int fd_;
-	PyObjectPtr pyCallback_;
+	PyObjectPtr Callback_;
 
 	bool write_;
 };

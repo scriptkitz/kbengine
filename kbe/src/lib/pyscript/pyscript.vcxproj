@@ -190,7 +190,6 @@
     <ClCompile Include="py_memorystream.cpp" />
     <ClCompile Include="pyprofile.cpp" />
     <ClCompile Include="pyprofile_handler.cpp" />
-    <ClCompile Include="pystruct.cpp" />
     <ClCompile Include="pywatcher.cpp" />
     <ClCompile Include="py_platform.cpp" />
     <ClCompile Include="py_compression.cpp" />
@@ -217,7 +216,6 @@
     <ClInclude Include="pyobject_pointer.h" />
     <ClInclude Include="pyprofile.h" />
     <ClInclude Include="pyprofile_handler.h" />
-    <ClInclude Include="pystruct.h" />
     <ClInclude Include="pythread_lock.h" />
     <ClInclude Include="pywatcher.h" />
     <ClInclude Include="py_platform.h" />

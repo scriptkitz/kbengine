@@ -53,6 +53,12 @@ public:
 	int registerPyObjectToScript(const char* attrName, PyObject* pyObj);
 	int unregisterPyObjectToScript(const char* attrName);
 
+	bool installLuaScript();
+	virtual bool installLuaModules();
+	virtual void onInstallLuaModules() {};
+	virtual bool uninstallLuaModules();
+	bool uninstallLuaScript();
+
 	bool installPyScript();
 	virtual bool installPyModules();
 	virtual void onInstallPyModules() {};
