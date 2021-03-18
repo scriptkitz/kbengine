@@ -76,6 +76,8 @@ public:
 		获取脚本基础模块 
 	*/
 	INLINE PyObject* getModule(void) const;
+
+	INLINE sol::state& getLua() { return lua_; }
 	INLINE sol::main_table getLuaModule(void) const;
 
 	/** 

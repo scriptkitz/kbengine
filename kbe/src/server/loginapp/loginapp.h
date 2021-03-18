@@ -48,6 +48,8 @@ public:
 	bool initializeEnd();
 	void finalise();
 	void onInstallPyModules();
+	void onInstallLuaModules();
+
 	
 	virtual void onShutdownBegin();
 	virtual void onShutdownEnd();

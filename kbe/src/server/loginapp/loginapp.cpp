@@ -60,6 +60,8 @@ void Loginapp::onShutdownBegin()
 	// Í¨Öª½Å±¾
 	SCOPED_PROFILE(SCRIPTCALL_PROFILE);
 	SCRIPT_OBJECT_CALL_ARGS0(getEntryScript().get(), const_cast<char*>("onLoginAppShutDown"), false);
+	auto onEntryFun = getScript().getLua()["onLoginAppShutDown"];
+	if (onEntryFun.valid()) onEntryFun.call();
 }
 
 //-------------------------------------------------------------------------------------	
@@ -140,6 +142,8 @@ void Loginapp::onChannelDeregister(Network::Channel * pChannel)
                 {
                     SCRIPT_ERROR_CHECK();
                 }
+				auto onEntryFun = getScript().getLua()["onLoseLogin"];
+				if (onEntryFun.valid()) onEntryFun.call(extra.c_str());
 			}
 		}
 	}
@@ -179,6 +183,9 @@ bool Loginapp::initializeEnd()
 		Py_DECREF(pyResult);
 	else
 		SCRIPT_ERROR_CHECK();
+
+	auto onEntryFun = getScript().getLua()["onLoginAppReady"];
+	if (onEntryFun.valid()) onEntryFun.call();
 	
 	pTelnetServer_ = new TelnetServer(&this->dispatcher(), &this->networkInterface());
 	pTelnetServer_->pScript(&this->getScript());
@@ -205,6 +212,16 @@ void Loginapp::onInstallPyModules()
 	}
 }
 
+//-------------------------------------------------------------------------------------		
+void Loginapp::onInstallLuaModules()
+{
+	sol::main_table module = getScript().getLuaModule();
+
+	for (int i = 0; i < SERVER_ERR_MAX; i++)
+	{
+		module.set(SERVER_ERR_STR[i], i);
+	}
+}
 //-------------------------------------------------------------------------------------
 void Loginapp::finalise()
 {
@@ -419,7 +436,34 @@ bool Loginapp::_createAccount(Network::Channel* pChannel, std::string& accountNa
 			SCRIPT_ERROR_CHECK();
 			retcode = SERVER_ERR_OP_FAILED;
 		}
-			
+		
+
+		auto onEntryFun = getScript().getLua()["onRequestCreateAccount"];
+		if (onEntryFun.valid())
+		{
+			char* sname;
+			char* spassword;
+			char* extraDatas;
+			int extraDatas_size = 0;
+			sol::tie(retcode, sname, spassword, extraDatas, extraDatas_size) = onEntryFun.call(
+				accountName.c_str(), password.c_str(),
+				datas.c_str(), datas.length()
+			);
+			accountName = sname;
+			password = spassword;
+
+			if (extraDatas && extraDatas_size > 0)
+			{
+				retdatas.assign(extraDatas, extraDatas_size);
+				datas.assign(extraDatas, extraDatas_size);
+			}
+		}
+		else
+		{
+			retcode = SERVER_ERR_OP_FAILED;
+		}
+
+
 		if(retcode != SERVER_SUCCESS)
 		{
 			Network::Bundle* pBundle = Network::Bundle::createPoolObject(OBJECTPOOL_POINT);
@@ -602,6 +646,12 @@ void Loginapp::onReqCreateAccountResult(Network::Channel* pChannel, MemoryStream
 	{
 		SCRIPT_ERROR_CHECK();
 	}
+	auto onEntryFun = getScript().getLua()["onCreateAccountCallbackFromDB"];
+	if (onEntryFun.valid())
+		onEntryFun.call(
+			accountName.c_str(), failedcode,
+			retdatas.c_str(), retdatas.length()
+		);
 
 	DEBUG_MSG(fmt::format("Loginapp::onReqCreateAccountResult: accountName={}, failedcode={}.\n",
 		accountName.c_str(), failedcode));
@@ -1083,6 +1133,47 @@ void Loginapp::login(Network::Channel* pChannel, MemoryStream& s)
 		_loginFailed(pChannel, loginName, SERVER_ERR_OP_FAILED, datas, true);
 	}
 
+	auto onEntryFun = getScript().getLua()["onRequestLogin"];
+	if (onEntryFun.valid())
+	{
+		SERVER_ERROR_CODE error;
+		char* sname;
+		char* spassword;
+		char* extraDatas;
+		Py_ssize_t extraDatas_size = 0;
+		sol::tie(error, sname, spassword, tctype, extraDatas, extraDatas_size) = onEntryFun.call(
+			loginName.c_str(), password.c_str(),
+			tctype, datas.c_str(), datas.length()
+		);
+		bool login_check = true;
+		if (login_check)
+		{
+			loginName = sname;
+			password = spassword;
+
+			if (extraDatas && extraDatas_size > 0)
+				datas.assign(extraDatas, extraDatas_size);
+		}
+
+		if (error != SERVER_SUCCESS)
+		{
+			login_check = false;
+			_loginFailed(pChannel, loginName, error, datas, true);
+		}
+
+		if (loginName.size() == 0)
+		{
+			INFO_MSG("Loginapp::login: loginName is NULL.\n");
+			_loginFailed(pChannel, loginName, SERVER_ERR_NAME, datas, true);
+			s.done();
+			return;
+		}
+	}
+	else
+	{
+		_loginFailed(pChannel, loginName, SERVER_ERR_OP_FAILED, datas, true);
+	}
+
 	PendingLoginMgr::PLInfos* ptinfos = pendingLoginMgr_.find(loginName);
 	if(ptinfos != NULL)
 	{
@@ -1244,6 +1335,12 @@ void Loginapp::onLoginAccountQueryResultFromDbmgr(Network::Channel* pChannel, Me
 	{
 		SCRIPT_ERROR_CHECK();
 	}
+	auto onEntryFun = getScript().getLua()["onLoginCallbackFromDB"];
+	if (onEntryFun.valid())
+		onEntryFun.call(
+			loginName.c_str(), accountName.c_str(), 
+			retcode, datas.c_str(), datas.length()
+		);
 	
 	infos->datas = datas;
 
