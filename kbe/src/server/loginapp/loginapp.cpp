@@ -59,7 +59,7 @@ void Loginapp::onShutdownBegin()
 	
 	// 通知脚本
 	SCOPED_PROFILE(SCRIPTCALL_PROFILE);
-	SCRIPT_OBJECT_CALL_ARGS0(getEntryScript().get(), const_cast<char*>("onLoginAppShutDown"), false);
+
 	auto onEntryFun = getScript().getLua()["onLoginAppShutDown"];
 	if (onEntryFun.valid()) onEntryFun.call();
 }
@@ -129,21 +129,15 @@ void Loginapp::onChannelDeregister(Network::Channel * pChannel)
 
                 // 把请求交由脚本处理
                 SCOPED_PROFILE(SCRIPTCALL_PROFILE);
-                PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(), 
-                                                    const_cast<char*>("onLoseLogin"), 
-                                                    const_cast<char*>("s"), 
-                                                    extra.c_str());
-
-                if(pyResult != NULL)
-                {
-                    Py_DECREF(pyResult);
-                }
-                else
-                {
-                    SCRIPT_ERROR_CHECK();
-                }
 				auto onEntryFun = getScript().getLua()["onLoseLogin"];
-				if (onEntryFun.valid()) onEntryFun.call(extra.c_str());
+				if (onEntryFun.valid())
+				{
+					onEntryFun.call(extra.c_str());
+				}
+				else
+				{
+					luaL_error(getScript().getLua().lua_state(), "no onLoseLogin!");
+				}
 			}
 		}
 	}
@@ -175,17 +169,15 @@ bool Loginapp::initializeEnd()
 	SCOPED_PROFILE(SCRIPTCALL_PROFILE);
 
 	// 所有脚本都加载完毕
-	PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(), 
-										const_cast<char*>("onLoginAppReady"), 
-										const_cast<char*>(""));
-
-	if(pyResult != NULL)
-		Py_DECREF(pyResult);
-	else
-		SCRIPT_ERROR_CHECK();
 
 	auto onEntryFun = getScript().getLua()["onLoginAppReady"];
-	if (onEntryFun.valid()) onEntryFun.call();
+	if (onEntryFun.valid()) {
+		onEntryFun.call();
+	}
+	else
+	{
+		luaL_error(getScript().getLua().lua_state(), "no onLoginAppReady!");
+	}
 	
 	pTelnetServer_ = new TelnetServer(&this->dispatcher(), &this->networkInterface());
 	pTelnetServer_->pScript(&this->getScript());
@@ -382,62 +374,6 @@ bool Loginapp::_createAccount(Network::Channel* pChannel, std::string& accountNa
 		SERVER_ERROR_CODE retcode = SERVER_SUCCESS;
 		SCOPED_PROFILE(SCRIPTCALL_PROFILE);
 
-		PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(), 
-											const_cast<char*>("onRequestCreateAccount"), 
-											const_cast<char*>("ssy#"), 
-											accountName.c_str(),
-											password.c_str(),
-											datas.c_str(), datas.length());
-
-		if(pyResult != NULL)
-		{
-			if(PySequence_Check(pyResult) && PySequence_Size(pyResult) == 4)
-			{
-				char* sname;
-				char* spassword;
-			    char *extraDatas;
-			    Py_ssize_t extraDatas_size = 0;
-				
-				if(!PyArg_ParseTuple(pyResult, "H|s|s|y#",  &retcode, &sname, &spassword, &extraDatas, &extraDatas_size))
-				{
-					ERROR_MSG(fmt::format("Loginapp::_createAccount: {}.onRequestCreateAccount, Return value error! accountName={}\n", 
-						g_kbeSrvConfig.getLoginApp().entryScriptFile, accountName));
-
-					retcode = SERVER_ERR_OP_FAILED;
-				}
-				else
-				{
-					accountName = sname;
-					password = spassword;
-
-					if (extraDatas && extraDatas_size > 0)
-					{
-						retdatas.assign(extraDatas, extraDatas_size);
-						datas.assign(extraDatas, extraDatas_size);
-					}
-					else
-					{
-						SCRIPT_ERROR_CHECK();
-					}
-				}
-			}
-			else
-			{
-				ERROR_MSG(fmt::format("Loginapp::_createAccount: {}.onRequestCreateAccount, Return value error, must be errorcode or tuple(errorno, accountName, password, datas)! accountName={}\n", 
-					g_kbeSrvConfig.getLoginApp().entryScriptFile, accountName));
-
-				retcode = SERVER_ERR_OP_FAILED;
-			}
-			
-			Py_DECREF(pyResult);
-		}
-		else
-		{
-			SCRIPT_ERROR_CHECK();
-			retcode = SERVER_ERR_OP_FAILED;
-		}
-		
-
 		auto onEntryFun = getScript().getLua()["onRequestCreateAccount"];
 		if (onEntryFun.valid())
 		{
@@ -460,6 +396,7 @@ bool Loginapp::_createAccount(Network::Channel* pChannel, std::string& accountNa
 		}
 		else
 		{
+			luaL_error(getScript().getLua().lua_state(), "no onRequestCreateAccount!");
 			retcode = SERVER_ERR_OP_FAILED;
 		}
 
@@ -631,27 +568,19 @@ void Loginapp::onReqCreateAccountResult(Network::Channel* pChannel, MemoryStream
 
 	// 把请求交由脚本处理
 	SCOPED_PROFILE(SCRIPTCALL_PROFILE);
-	PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(), 
-										const_cast<char*>("onCreateAccountCallbackFromDB"), 
-										const_cast<char*>("sHy#"), 
-										accountName.c_str(),
-										failedcode,
-										retdatas.c_str(), retdatas.length());
 
-	if(pyResult != NULL)
-	{
-		Py_DECREF(pyResult);
-	}
-	else
-	{
-		SCRIPT_ERROR_CHECK();
-	}
 	auto onEntryFun = getScript().getLua()["onCreateAccountCallbackFromDB"];
 	if (onEntryFun.valid())
+	{
 		onEntryFun.call(
 			accountName.c_str(), failedcode,
 			retdatas.c_str(), retdatas.length()
 		);
+	}
+	else
+	{
+		luaL_error(getScript().getLua().lua_state(), "no onCreateAccountCallbackFromDB!");
+	}
 
 	DEBUG_MSG(fmt::format("Loginapp::onReqCreateAccountResult: accountName={}, failedcode={}.\n",
 		accountName.c_str(), failedcode));
@@ -1059,80 +988,6 @@ void Loginapp::login(Network::Channel* pChannel, MemoryStream& s)
 	}
 	
 	// 把请求交由脚本处理
-	SCOPED_PROFILE(SCRIPTCALL_PROFILE);
-	PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(), 
-										const_cast<char*>("onRequestLogin"), 
-										const_cast<char*>("ssby#"), 
-										loginName.c_str(),
-										password.c_str(),
-										tctype,
-										datas.c_str(), datas.length());
-
-	if(pyResult != NULL)
-	{
-		bool login_check = true;
-		if(PySequence_Check(pyResult) && PySequence_Size(pyResult) == 5)
-		{
-			char* sname;
-			char* spassword;
-		    char *extraDatas;
-		    Py_ssize_t extraDatas_size = 0;
-			SERVER_ERROR_CODE error;
-			
-			if(!PyArg_ParseTuple(pyResult, "H|s|s|b|y#",  &error, &sname, &spassword, &tctype, &extraDatas, &extraDatas_size))
-			{
-				ERROR_MSG(fmt::format("Loginapp::login: {}.onRequestLogin, Return value error! loginName={}\n", 
-					g_kbeSrvConfig.getLoginApp().entryScriptFile, loginName));
-
-				login_check = false;
-				_loginFailed(pChannel, loginName, SERVER_ERR_OP_FAILED, datas, true);
-			}
-			
-			if(login_check)
-			{
-				loginName = sname;
-				password = spassword;
-
-				if (extraDatas && extraDatas_size > 0)
-					datas.assign(extraDatas, extraDatas_size);
-				else
-					SCRIPT_ERROR_CHECK();
-			}
-			
-			if(error != SERVER_SUCCESS)
-			{
-				login_check = false;
-				_loginFailed(pChannel, loginName, error, datas, true);
-			}
-			
-			if(loginName.size() == 0)
-			{
-				INFO_MSG("Loginapp::login: loginName is NULL.\n");
-				_loginFailed(pChannel, loginName, SERVER_ERR_NAME, datas, true);
-				s.done();
-				return;
-			}
-		}
-		else
-		{
-			ERROR_MSG(fmt::format("Loginapp::login: {}.onRequestLogin, Return value error, must be errorcode or tuple(errorno, loginName, password, clientType, datas)! loginName={}\n", 
-				g_kbeSrvConfig.getLoginApp().entryScriptFile, loginName));
-
-			login_check = false;
-			_loginFailed(pChannel, loginName, SERVER_ERR_OP_FAILED, datas, true);
-		}
-		
-		Py_DECREF(pyResult);
-		
-		if(!login_check)
-			return;
-	}
-	else
-	{
-		SCRIPT_ERROR_CHECK();
-		_loginFailed(pChannel, loginName, SERVER_ERR_OP_FAILED, datas, true);
-	}
-
 	auto onEntryFun = getScript().getLua()["onRequestLogin"];
 	if (onEntryFun.valid())
 	{
@@ -1171,6 +1026,7 @@ void Loginapp::login(Network::Channel* pChannel, MemoryStream& s)
 	}
 	else
 	{
+		luaL_error(getScript().getLua().lua_state(), "no onRequestLogin!");
 		_loginFailed(pChannel, loginName, SERVER_ERR_OP_FAILED, datas, true);
 	}
 
@@ -1319,28 +1175,18 @@ void Loginapp::onLoginAccountQueryResultFromDbmgr(Network::Channel* pChannel, Me
 
 	// 把请求交由脚本处理
 	SCOPED_PROFILE(SCRIPTCALL_PROFILE);
-	PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(), 
-										const_cast<char*>("onLoginCallbackFromDB"), 
-										const_cast<char*>("ssHy#"), 
-										loginName.c_str(),
-										accountName.c_str(),
-										retcode,
-										datas.c_str(), datas.length());
-
-	if(pyResult != NULL)
+	auto onEntryFun = getScript().getLua()["onLoginCallbackFromDB"];
+	if (onEntryFun.valid())
 	{
-		Py_DECREF(pyResult);
+		onEntryFun.call(
+			loginName.c_str(), accountName.c_str(),
+			retcode, datas.c_str(), datas.length()
+		);
 	}
 	else
 	{
-		SCRIPT_ERROR_CHECK();
+		luaL_error(getScript().getLua().lua_state(), "no onLoginCallbackFromDB!");
 	}
-	auto onEntryFun = getScript().getLua()["onLoginCallbackFromDB"];
-	if (onEntryFun.valid())
-		onEntryFun.call(
-			loginName.c_str(), accountName.c_str(), 
-			retcode, datas.c_str(), datas.length()
-		);
 	
 	infos->datas = datas;
 

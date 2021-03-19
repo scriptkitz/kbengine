@@ -76,7 +76,8 @@ void Interfaces::onShutdownBegin()
 
 	// 通知脚本
 	SCOPED_PROFILE(SCRIPTCALL_PROFILE);
-	SCRIPT_OBJECT_CALL_ARGS0(getEntryScript().get(), const_cast<char*>("onInterfaceAppShutDown"), false);
+	auto onEntryFun = getScript().getLua()["onInterfaceAppShutDown"];
+	if (onEntryFun.valid()) onEntryFun.call();
 }
 
 //-------------------------------------------------------------------------------------	
@@ -150,14 +151,11 @@ bool Interfaces::initializeEnd()
 	SCOPED_PROFILE(SCRIPTCALL_PROFILE);
 
 	// 所有脚本都加载完毕
-	PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(), 
-										const_cast<char*>("onInterfaceAppReady"), 
-										const_cast<char*>(""));
-
-	if(pyResult != NULL)
-		Py_DECREF(pyResult);
+	auto onEntryFun = getScript().getLua()["onInterfaceAppReady"];
+	if (onEntryFun.valid())
+		onEntryFun.call();
 	else
-		SCRIPT_ERROR_CHECK();
+		luaL_error(getScript().getLua().lua_state(), "no onInterfaceAppReady!");
 
 	pTelnetServer_ = new TelnetServer(&this->dispatcher(), &this->networkInterface());
 	pTelnetServer_->pScript(&this->getScript());
@@ -522,17 +520,18 @@ void Interfaces::reqCreateAccount(Network::Channel* pChannel, KBEngine::MemorySt
 	SCOPED_PROFILE(SCRIPTCALL_PROFILE);
 	SCOPED_PROFILE(SCRIPTCALL_CREATEACCOUNT_PROFILE);
 
-	PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(), 
-										const_cast<char*>("onRequestCreateAccount"), 
-										const_cast<char*>("ssy#"), 
-										registerName.c_str(), 
-										password.c_str(),
-										datas.c_str(), datas.length());
-
-	if(pyResult != NULL)
-		Py_DECREF(pyResult);
+	auto onEntryFun = getScript().getLua()["onRequestCreateAccount"];
+	if (onEntryFun.valid())
+	{
+		onEntryFun.call(
+			accountName.c_str(), password.c_str(),
+			datas.c_str(), datas.length()
+		);
+	}
 	else
-		SCRIPT_ERROR_CHECK();
+	{
+		luaL_error(getScript().getLua().lua_state(), "no onRequestCreateAccount!");
+	}
 }
 
 //-------------------------------------------------------------------------------------
@@ -634,17 +633,18 @@ void Interfaces::onAccountLogin(Network::Channel* pChannel, KBEngine::MemoryStre
 	SCOPED_PROFILE(SCRIPTCALL_PROFILE);
 	SCOPED_PROFILE(SCRIPTCALL_ACCOUNTLOGIN_PROFILE);
 
-	PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(), 
-										const_cast<char*>("onRequestAccountLogin"), 
-										const_cast<char*>("ssy#"), 
-										loginName.c_str(), 
-										password.c_str(), 
-										datas.c_str(), datas.length());
-
-	if(pyResult != NULL)
-		Py_DECREF(pyResult);
+	auto onEntryFun = getScript().getLua()["onRequestAccountLogin"];
+	if (onEntryFun.valid())
+	{
+		onEntryFun.call(
+			loginName.c_str(), password.c_str(),
+			datas.c_str(), datas.length()
+		);
+	}
 	else
-		SCRIPT_ERROR_CHECK();
+	{
+		luaL_error(getScript().getLua().lua_state(), "no onRequestAccountLogin!");
+	}
 }
 
 //-------------------------------------------------------------------------------------
@@ -749,17 +749,18 @@ void Interfaces::charge(Network::Channel* pChannel, KBEngine::MemoryStream& s)
 	SCOPED_PROFILE(SCRIPTCALL_PROFILE);
 	SCOPED_PROFILE(SCRIPTCALL_CHARGE_PROFILE);
 
-	PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(), 
-										const_cast<char*>("onRequestCharge"), 
-										const_cast<char*>("sKy#"), 
-										pOrdersCharge->ordersID.c_str(),
-										pOrdersCharge->dbid, 
-										pOrdersCharge->postDatas.c_str(), pOrdersCharge->postDatas.length());
-
-	if(pyResult != NULL)
-		Py_DECREF(pyResult);
+	auto onEntryFun = getScript().getLua()["onRequestCharge"];
+	if (onEntryFun.valid())
+	{
+		onEntryFun.call(
+			pOrdersCharge->ordersID.c_str(), pOrdersCharge->dbid,
+			pOrdersCharge->postDatas.c_str(), pOrdersCharge->postDatas.length()
+		);
+	}
 	else
-		SCRIPT_ERROR_CHECK();
+	{
+		luaL_error(getScript().getLua().lua_state(), "no onRequestCharge!");
+	}
 }
 
 //-------------------------------------------------------------------------------------

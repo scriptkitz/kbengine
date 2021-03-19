@@ -75,24 +75,12 @@ Dbmgr::~Dbmgr()
 //-------------------------------------------------------------------------------------
 ShutdownHandler::CAN_SHUTDOWN_STATE Dbmgr::canShutdown()
 {
-	if (getEntryScript().get() && PyObject_HasAttrString(getEntryScript().get(), "onReadyForShutDown") > 0)
+	auto onEntryFun = getScript().getLua()["onReadyForShutDown"];
+	if (onEntryFun.valid())
 	{
-		// 所有脚本都加载完毕
-		PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(),
-			const_cast<char*>("onReadyForShutDown"),
-			const_cast<char*>(""));
-
-		if (pyResult != NULL)
+		bool isReady = onEntryFun.call();
+		if (!isReady)
 		{
-			bool isReady = (pyResult == Py_True);
-			Py_DECREF(pyResult);
-
-			if (!isReady)
-				return ShutdownHandler::CAN_SHUTDOWN_STATE_USER_FALSE;
-		}
-		else
-		{
-			SCRIPT_ERROR_CHECK();
 			return ShutdownHandler::CAN_SHUTDOWN_STATE_USER_FALSE;
 		}
 	}
@@ -153,7 +141,12 @@ void Dbmgr::onShutdownBegin()
 
 	// 通知脚本
 	SCOPED_PROFILE(SCRIPTCALL_PROFILE);
-	SCRIPT_OBJECT_CALL_ARGS0(getEntryScript().get(), const_cast<char*>("onDBMgrShutDown"), false);
+
+	auto onEntryFun = getScript().getLua()["onDBMgrShutDown"];
+	if (onEntryFun.valid())
+	{
+		onEntryFun.call();
+	}
 }
 
 //-------------------------------------------------------------------------------------	
@@ -306,14 +299,15 @@ bool Dbmgr::initializeEnd()
 	SCOPED_PROFILE(SCRIPTCALL_PROFILE);
 
 	// 所有脚本都加载完毕
-	PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(), 
-										const_cast<char*>("onDBMgrReady"), 
-										const_cast<char*>(""));
-
-	if(pyResult != NULL)
-		Py_DECREF(pyResult);
+	auto onEntryFun = getScript().getLua()["onDBMgrReady"];
+	if (onEntryFun.valid())
+	{
+		onEntryFun.call();
+	}
 	else
-		SCRIPT_ERROR_CHECK();
+	{
+		luaL_error(getScript().getLua().lua_state(), "no onDBMgrReady!");
+	}
 
 	pTelnetServer_ = new TelnetServer(&this->dispatcher(), &this->networkInterface());
 	pTelnetServer_->pScript(&this->getScript());
@@ -1239,19 +1233,15 @@ std::string Dbmgr::selectAccountDBInterfaceName(const std::string& name)
 
 	// 把请求交由脚本处理
 	SCOPED_PROFILE(SCRIPTCALL_PROFILE);
-	PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(),
-		const_cast<char*>("onSelectAccountDBInterface"),
-		const_cast<char*>("s"),
-		name.c_str());
 
-	if (pyResult != NULL)
+	auto onEntryFun = getScript().getLua()["onSelectAccountDBInterface"];
+	if (onEntryFun.valid())
 	{
-		dbInterfaceName = PyUnicode_AsUTF8AndSize(pyResult, NULL);
-		Py_DECREF(pyResult);
+		dbInterfaceName = onEntryFun.call(name.c_str());
 	}
 	else
 	{
-		SCRIPT_ERROR_CHECK();
+		luaL_error(getScript().getLua().lua_state(), "no onSelectAccountDBInterface!");
 	}
 
 	if (dbInterfaceName == "" || g_kbeSrvConfig.dbInterface(dbInterfaceName) == NULL)

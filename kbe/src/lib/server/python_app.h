@@ -48,7 +48,6 @@ public:
 	~PythonApp();
 	
 	KBEngine::script::Script& getScript(){ return script_; }
-	PyObjectPtr getEntryScript(){ return entryScript_; }
 
 	int registerPyObjectToScript(const char* attrName, PyObject* pyObj);
 	int unregisterPyObjectToScript(const char* attrName);
@@ -59,8 +58,8 @@ public:
 	virtual bool uninstallLuaModules();
 	bool uninstallLuaScript();
 
-	bool installPyScript();
-	virtual bool installPyModules();
+	//bool installPyScript();
+	virtual bool installPyModules() { return true; };
 	virtual void onInstallPyModules() {};
 	virtual bool uninstallPyModules();
 	bool uninstallPyScript();
