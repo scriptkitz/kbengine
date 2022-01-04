@@ -181,6 +181,82 @@ void DebugHelper::onMessage(uint32 logType, const char * str, uint32 length)
 #else
 	bool isMainThread = (mainThreadID_ == GetCurrentThreadId());
 #endif
+
+	if(length <= 0 || noSyncLog_)
+		return;
+
+	if(g_componentType == MACHINE_TYPE || 
+		g_componentType == CONSOLE_TYPE || 
+		g_componentType == LOGGER_TYPE || 
+		g_componentType == CLIENT_TYPE)
+		return;
+
+	if (!isMainThread)
+	{
+		MemoryStream* pMemoryStream = memoryStreamPool_.createObject(OBJECTPOOL_POINT);
+
+		(*pMemoryStream) << getUserUID();
+		(*pMemoryStream) << logType;
+		(*pMemoryStream) << g_componentType;
+		(*pMemoryStream) << g_componentID;
+		(*pMemoryStream) << g_componentGlobalOrder;
+		(*pMemoryStream) << g_componentGroupOrder;
+
+		uint64 t = getTimeMs();
+		(*pMemoryStream) << (int64)(t / 1000);
+		(*pMemoryStream) << (uint32)(t % 1000);
+		pMemoryStream->appendBlob(str, length);
+
+		childThreadBufferedLogPackets_.push(pMemoryStream);
+	}
+	else
+	{
+		if(g_kbeSrvConfig.tickMaxBufferedLogs() > 0 && hasBufferedLogPackets_ > g_kbeSrvConfig.tickMaxBufferedLogs())
+		{
+			int8 v = Network::g_trace_packet;
+			Network::g_trace_packet = 0;
+
+#ifdef NO_USE_LOG4CXX
+#else
+			KBE_LOG4CXX_WARN(g_logger, fmt::format("DebugHelper::onMessage: bufferedLogPackets is full({} > kbengine[_defs].xml->logger->tick_max_buffered_logs->{})!\n", 
+				hasBufferedLogPackets_, g_kbeSrvConfig.tickMaxBufferedLogs()));
+#endif
+
+			Network::g_trace_packet = v;
+
+			clearBufferedLog();
+			
+#ifdef NO_USE_LOG4CXX
+#else
+			KBE_LOG4CXX_WARN(g_logger, fmt::format("DebugHelper::onMessage: discard logs!\n"));
+#endif
+			return;
+		}
+
+		int8 trace_packet = Network::g_trace_packet;
+		Network::g_trace_packet = 0;
+		Network::Bundle* pBundle = Network::Bundle::createPoolObject(OBJECTPOOL_POINT);
+
+		pBundle->newMessage(LoggerInterface::writeLog);
+
+		(*pBundle) << getUserUID();
+		(*pBundle) << logType;
+		(*pBundle) << g_componentType;
+		(*pBundle) << g_componentID;
+		(*pBundle) << g_componentGlobalOrder;
+		(*pBundle) << g_componentGroupOrder;
+
+		uint64 t = getTimeMs();
+		(*pBundle) << (int64)(t / 1000);
+		(*pBundle) << (uint32)(t % 1000);
+		pBundle->appendBlob(str, length);
+
+		bufferedLogPackets_.push(pBundle);
+		Network::g_trace_packet = trace_packet;
+		g_pDebugHelperSyncHandler->startActiveTick();
+	}
+
+	++hasBufferedLogPackets_;
 }
 
 //-------------------------------------------------------------------------------------
