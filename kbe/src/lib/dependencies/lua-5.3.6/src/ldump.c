@@ -17,6 +17,9 @@
 #include "lobject.h"
 #include "lstate.h"
 #include "lundump.h"
+#if LUAC_COMPATIBLE_FORMAT
+#include <stdint.h>
+#endif
 
 
 typedef struct {
@@ -74,7 +77,11 @@ static void DumpString (const TString *s, DumpState *D) {
   if (s == NULL)
     DumpByte(0, D);
   else {
+#if LUAC_COMPATIBLE_FORMAT
+    uint32_t size = tsslen(s) + 1;
+#else
     size_t size = tsslen(s) + 1;  /* include trailing '\0' */
+#endif
     const char *str = getstr(s);
     if (size < 0xFF)
       DumpByte(cast_int(size), D);
@@ -187,7 +194,9 @@ static void DumpHeader (DumpState *D) {
   DumpByte(LUAC_FORMAT, D);
   DumpLiteral(LUAC_DATA, D);
   DumpByte(sizeof(int), D);
+#if !LUAC_COMPATIBLE_FORMAT
   DumpByte(sizeof(size_t), D);
+#endif
   DumpByte(sizeof(Instruction), D);
   DumpByte(sizeof(lua_Integer), D);
   DumpByte(sizeof(lua_Number), D);
